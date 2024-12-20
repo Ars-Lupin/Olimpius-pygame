@@ -1,8 +1,7 @@
-import pygame # type: ignore
+import pygame  # type: ignore
 from batalha import desenha_fundo, desenha_personagens, preenche_infos, desenha_inimigos
 
 class Personagem:
-    
     '''
     Atributos dos personagens:
         - Nome;
@@ -29,9 +28,6 @@ class Personagem:
         self.imagem = pygame.image.load(src_imagem)
         self.imagem = pygame.transform.scale(self.imagem, (230, 230))
 
-        if self.nome == 'Poseidon':
-            self.imagem = pygame.transform.scale(self.imagem, (255, 255))
-
         self.defesa_ativa = False
         self.habilidade_ativa = False
         self.posicao_menu = None
@@ -41,20 +37,36 @@ class Personagem:
         self.imagem_menu_selecionado = pygame.image.load(src_imagem_menu_selecionado)
 
     def exibir_imagem(self, tela, pos_x, pos_y):
-        tela.blit(self.imagem_atual, (pos_x, pos_y))
+        tela.blit(self.imagem, (pos_x, pos_y))
 
     @staticmethod
     def cria_personagens():
-        # Criando as instâncias dos personagens e salvando em uma lista.
-        return [
+        # Lista de 20 personagens
+        personagens = [
             Personagem('Zeus', 80, 60, 150, 70, 'images/batalha/zeus.png', 'images/menu/zeus-menu.png', 'images/menu/zeus-menu-selecionado.png'),
             Personagem('Atena', 70, 90, 130, 80, 'images/batalha/atena.png', 'images/menu/atena-menu.png', 'images/menu/atena-menu-selecionado.png'),
             Personagem('Ares', 90, 50, 140, 60, 'images/batalha/ares.png', 'images/menu/ares-menu.png', 'images/menu/ares-menu-selecionado.png'),
             Personagem('Artemis', 75, 55, 120, 90, 'images/batalha/artemis.png', 'images/menu/artemis-menu.png', 'images/menu/artemis-menu-selecionado.png'),
-            Personagem('Poseidon', 85, 65, 160, 65, 'images/batalha/poseidon.png', 'images/menu/poseidon-menu.png', 'images/menu/poseidon-menu-selecionado.png')
+            Personagem('Poseidon', 85, 65, 160, 65, 'images/batalha/poseidon.png', 'images/menu/poseidon-menu.png', 'images/menu/poseidon-menu-selecionado.png'),
+            Personagem('Afrodite', 60, 50, 110, 85, 'images/batalha/afrodite.png', 'images/menu/afrodite-menu.png', 'images/menu/afrodite-menu-selecionado.png'),
+            Personagem('Hades', 95, 70, 170, 60, 'images/batalha/hades.png', 'images/menu/hades-menu.png', 'images/menu/hades-menu-selecionado.png'),
+            Personagem('Hefesto', 70, 80, 150, 50, 'images/batalha/hefesto.png', 'images/menu/hefesto-menu.png', 'images/menu/hefesto-menu-selecionado.png'),
+            Personagem('Hera', 65, 75, 140, 75, 'images/batalha/hera.png', 'images/menu/hera-menu.png', 'images/menu/hera-menu-selecionado.png'),
+            Personagem('Hermes', 60, 45, 120, 95, 'images/batalha/hermes.png', 'images/menu/hermes-menu.png', 'images/menu/hermes-menu-selecionado.png'),
+            Personagem('Apolo', 80, 60, 140, 85, 'images/batalha/apolo.png', 'images/menu/apolo-menu.png', 'images/menu/apolo-menu-selecionado.png'),
+            Personagem('Deméter', 70, 70, 130, 70, 'images/batalha/demeter.png', 'images/menu/demeter-menu.png', 'images/menu/demeter-menu-selecionado.png'),
+            Personagem('Pantheon', 100, 100, 200, 50, 'images/batalha/pantheon.png', 'images/menu/pantheon-menu.png', 'images/menu/pantheon-menu-selecionado.png'),
+            Personagem('Luna', 85, 65, 150, 80, 'images/batalha/luna.png', 'images/menu/luna-menu.png', 'images/menu/luna-menu-selecionado.png'),
+            Personagem('Draktel', 90, 80, 160, 60, 'images/batalha/draktel.png', 'images/menu/draktel-menu.png', 'images/menu/draktel-menu-selecionado.png'),
+            Personagem('Alos', 75, 55, 130, 85, 'images/batalha/alos.png', 'images/menu/alos-menu.png', 'images/menu/alos-menu-selecionado.png'),
+            Personagem('Célion', 70, 70, 140, 70, 'images/batalha/celion.png', 'images/menu/celion-menu.png', 'images/menu/celion-menu-selecionado.png'),
+            Personagem('Shaya', 65, 60, 125, 90, 'images/batalha/shaya.png', 'images/menu/shaya-menu.png', 'images/menu/shaya-menu-selecionado.png'),
+            Personagem('Cratos', 95, 75, 180, 55, 'images/batalha/cratos.png', 'images/menu/cratos-menu.png', 'images/menu/cratos-menu-selecionado.png'),
+            Personagem('Hércules', 100, 90, 200, 50, 'images/batalha/hercules.png', 'images/menu/hercules-menu.png', 'images/menu/hercules-menu-selecionado.png'),
         ]
+        return personagens
     
-    def ataca_inimigo(self, tela, inimigos, personagens_selecionados, personagem_atual):
+    def ataca_inimigo(self, tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         pos_seta = inimigos[0].posicao_batalha
         img_seta = pygame.image.load('images/batalha/seta.png')
         img_seta = pygame.transform.scale(img_seta, (300, 300))
@@ -88,8 +100,8 @@ class Personagem:
                     elif event.key == pygame.K_x:
                         return False
             
-            desenha_fundo(tela, personagens_selecionados)
-            desenha_personagens(tela, personagens_selecionados)
+            desenha_fundo(tela, personagens_selecionados, screen_width, screen_height)
+            desenha_personagens(tela, personagens_selecionados, screen_width, screen_height)
             desenha_inimigos(tela, inimigos)
             preenche_infos(tela, personagens_selecionados, personagem_atual)
             tela.blit(img_seta, pos_seta)

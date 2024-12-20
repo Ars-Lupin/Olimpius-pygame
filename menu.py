@@ -1,36 +1,28 @@
-import pygame # type: ignore
-from pygame.locals import * # type: ignore
-from constants import largura_tela, altura_tela
+import pygame  # type: ignore
+from pygame.locals import *  # type: ignore
 from personagem import Personagem
-from constants import largura_tela, altura_tela, y_seta_correcao, x_seta_correcao
+from constants import y_seta_correcao, x_seta_correcao
 
-def desenha_menu(tela):
+def desenha_menu(tela, screen_width, screen_height):
     personagens = Personagem.cria_personagens()
-    desenha_fundo(tela)
-    desenha_botoes(tela, personagens)
-    return seleciona_personagens(tela, personagens)
+    desenha_fundo(tela, screen_width, screen_height)
+    return desenha_abas(tela, personagens, screen_width, screen_height)
 
-def desenha_fundo(tela):
-    # Carregando a imagem de fundo do menu e redimesionando para o tamanho da tela.
+def desenha_fundo(tela, screen_width, screen_height):
     img_fundo = pygame.image.load("images/menu/fundo-menu.jpg")
-    img_fundo = pygame.transform.scale(img_fundo, (largura_tela, altura_tela))
-
-    # Função para desenhar em cima de uma outra superfície (desenhar a imagem de fundo por cima da tela, partindo do canto superior esquerdo).
+    img_fundo = pygame.transform.scale(img_fundo, (screen_width, screen_height))
     tela.blit(img_fundo, (0, 0))
 
-    # Definindo a fonte, a cor do título e o título que ficará no menu principal.
-    font = pygame.font.Font(None, 45)
+    font = pygame.font.Font('fonts/god-of-war.ttf', 45)
     cor_titulo = (255, 255, 255)
-    texto_titulo = font.render('IntroBattle!', True, cor_titulo)
+    texto_titulo = font.render('Olimpius!', True, cor_titulo)
 
-    # Definindo a posição do texto e escrevendo o título no menu principal.
     largura_texto = texto_titulo.get_width()
     altura_texto = texto_titulo.get_height()
-    posicao_texto = ((largura_tela - largura_texto) // 2, 40)
+    posicao_texto = ((screen_width - largura_texto) // 2, 40)
     cor_fundo = (203, 54, 23)
     cor_borda = cor_titulo
 
-    # Desenhando um retângulo para colocar um fundo no título.
     pygame.draw.rect(
         tela, 
         cor_borda,
@@ -45,135 +37,141 @@ def desenha_fundo(tela):
 
     tela.blit(texto_titulo, posicao_texto)
 
+    # Botão de voltar
+    desenha_botao_voltar(tela)
 
-def desenha_botoes(tela, personagens):
-    # Definindo a fonte e a cor do texto que ficará nos botões.
-    font = pygame.font.Font('fonts/Anton-Regular.ttf', 30)
-    cor_texto = (255, 255, 255)
+def desenha_botao_voltar(tela):
+    font = pygame.font.Font('fonts/god-of-war.ttf', 30)
+    cor_fundo = (203, 54, 23)
+    cor_borda = (255, 255, 255)
+    cor_texto = (254, 181, 70)
+    texto = "Voltar"
 
-    # Variáveis para controlar a posição dos botões.
-    cont = 0
-    flag = 1
+    texto_voltar = font.render(texto, True, cor_texto)
+    largura_texto = texto_voltar.get_width()
+    altura_texto = texto_voltar.get_height()
 
-    # Desenhando os botões de cada personagem.
-    for i, personagem in enumerate(personagens):
-        # Definindo a posição do texto e escrevendo o texto nos botões.
-        texto_botao = font.render(personagem.nome, True, cor_texto)
-        cont += 1
+    x, y = 20, 20  # Posição do botão
+    largura_botao = largura_texto + 20
+    altura_botao = altura_texto + 10
 
-        if (cont > 3):
-            num = 150
+    pygame.draw.rect(tela, cor_borda, (x - 5, y - 5, largura_botao + 10, altura_botao + 10))
+    pygame.draw.rect(tela, cor_fundo, (x, y, largura_botao, altura_botao))
+    tela.blit(texto_voltar, (x + 10, y + 5))
 
-            if flag:
-                num = -130
-                flag = 0
+    return pygame.Rect(x, y, largura_botao, altura_botao)
 
-            posicao_botao = (largura_tela // 2 + num, altura_tela // 2 + 240)
-        else:
-            direction = i
+def desenha_abas(tela, personagens, screen_width, screen_height):
+    grupos_personagens = [personagens[i:i+10] for i in range(0, len(personagens), 10)]
+    aba_atual = 0
+    cursor = 0
+    selecionados = []
+    faltam = 3
+    botao_voltar = desenha_botao_voltar(tela)  # Retângulo do botão de voltar
 
-            if i == 2:
-                direction = -1
+    while True:
+        desenha_fundo(tela, screen_width, screen_height)
+        botao_voltar = desenha_botao_voltar(tela)
+        desenha_botoes(tela, grupos_personagens[aba_atual], screen_width, screen_height, cursor)
 
-            posicao_botao = (largura_tela // 2 - direction * 250, altura_tela // 2)
+        # Mensagem de seleção
+        font_grande = pygame.font.Font('fonts/god-of-war.ttf', 80)
+        mensagem = f"Selecione {faltam} personagens"
+        texto_mensagem = font_grande.render(mensagem, True, (254, 181, 70))
+        largura_mensagem = texto_mensagem.get_width()
+        tela.blit(texto_mensagem, ((screen_width - largura_mensagem) // 2, 50))
 
-        if personagem.selecionado:
-            img_personagem = personagem.imagem_menu_selecionado
-        else: 
-            img_personagem = personagem.imagem_menu
-        img_personagem = pygame.transform.scale(img_personagem, (150, 150))
-        tela.blit(img_personagem, (posicao_botao[0] - 100, posicao_botao[1] - 100))
-        personagem.posicao_menu = (posicao_botao[0] - x_seta_correcao, posicao_botao[1] - y_seta_correcao)
+        # Teclas de instrução
+        font_pequena = pygame.font.Font('fonts/god-of-war.ttf', 30)
+        instrucoes = "Teclas: [C] Selecionar | [0/1/3 do NumPad] Mudar abas"
+        texto_instrucoes = font_pequena.render(instrucoes, True, (254, 181, 70))
+        largura_instrucoes = texto_instrucoes.get_width()
+        tela.blit(texto_instrucoes, ((screen_width - largura_instrucoes) // 2, screen_height - 30))
 
-        tam = 60
+        # Exibir número da aba
+        texto_aba = font_pequena.render(f"Aba {aba_atual + 1}/{len(grupos_personagens)}", True, (255, 255, 255))
+        tela.blit(texto_aba, (screen_width // 2 - texto_aba.get_width() // 2, screen_height - 70))
 
-        if personagem.nome == "Ártemis" or personagem.nome == "Poseidon":
-            tam = 80
-
-        posicao_texto = (posicao_botao[0] - tam, posicao_botao[1] + 50)
-        tela.blit(texto_botao, posicao_texto)
-
-def seleciona_personagens(tela, personagens):
-    font = pygame.font.Font('fonts/god-of-war.ttf', 55)
-    personagens_selecionados = []
-    qtd_personagens_selecionados = 0
-    pos_menu = personagens[0].posicao_menu
-    img_seta = pygame.image.load('images/menu/seta.png')
-    img_seta = pygame.transform.scale(img_seta, (300, 300))
-
-    while qtd_personagens_selecionados < 3:
-        cor_texto_info = (203, 54, 23)
-        texto_info = font.render(
-            f'Escolha {3 - qtd_personagens_selecionados} {"personagem" if qtd_personagens_selecionados == 2 else "personagens"}!',
-            True,
-            cor_texto_info
-        )
-        posicao_texto_info = ((largura_tela - texto_info.get_width()) // 2, 120)
+        pygame.display.flip()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            elif event.type == KEYDOWN:
-                if event.key == K_UP:
-                    pos_menu = move_seta(personagens, pos_menu, 'up')
-                elif event.key == K_DOWN:
-                    pos_menu = move_seta(personagens, pos_menu, 'down')
-                elif event.key == K_LEFT:
-                    pos_menu = move_seta(personagens, pos_menu, 'left')
-                elif event.key == K_RIGHT:
-                    pos_menu = move_seta(personagens, pos_menu, 'right')
-                elif event.key == K_z:
-                    for personagem in personagens:
-                        if personagem.posicao_menu == pos_menu:
-                            if not personagem.selecionado:
-                                personagens_selecionados.append(personagem)
-                                qtd_personagens_selecionados += 1
-                                personagem.selecionado = True
-                                break
-                            else:
-                                personagem.selecionado = False
-                                qtd_personagens_selecionados -= 1
-                                personagens_selecionados.remove(personagem)
-                                break
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and botao_voltar.collidepoint(event.pos):
+                    return None  # Indica que o jogador quer voltar ao menu principal
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP0 or event.key == pygame.K_c:  # Selecionar personagem
+                    personagem = grupos_personagens[aba_atual][cursor]
+                    if personagem not in selecionados and len(selecionados) < 3:
+                        personagem.selecionado = True
+                        selecionados.append(personagem)
+                        faltam -= 1
+                    elif personagem in selecionados:
+                        personagem.selecionado = False
+                        selecionados.remove(personagem)
+                        faltam += 1
+                elif event.key == pygame.K_KP1 and aba_atual > 0:  # Mudar aba para a esquerda
+                    aba_atual -= 1
+                    cursor = 0
+                elif event.key == pygame.K_KP3 and aba_atual < len(grupos_personagens) - 1:  # Mudar aba para a direita
+                    aba_atual += 1
+                    cursor = 0
+                elif event.key in [pygame.K_UP, pygame.K_w]:
+                    cursor = max(0, cursor - 5)
+                elif event.key in [pygame.K_DOWN, pygame.K_s]:
+                    cursor = min(len(grupos_personagens[aba_atual]) - 1, cursor + 5)
+                elif event.key in [pygame.K_LEFT, pygame.K_a]:
+                    cursor = max(0, cursor - 1)
+                elif event.key in [pygame.K_RIGHT, pygame.K_d]:
+                    cursor = min(len(grupos_personagens[aba_atual]) - 1, cursor + 1)
+                elif event.key == pygame.K_RETURN:
+                    if len(selecionados) < 3:  # Não começar o jogo, piscar o texto
+                        for _ in range(3):
+                            tela.fill((0, 0, 0))
+                            pygame.display.flip()
+                            pygame.time.wait(200)
+                            tela.blit(texto_mensagem, ((screen_width - largura_mensagem) // 2, 50))
+                            pygame.display.flip()
+                            pygame.time.wait(200)
+                    else:
+                        return selecionados
 
-        desenha_fundo(tela)
-        desenha_botoes(tela, personagens)
-        tela.blit(texto_info, posicao_texto_info)
-        tela.blit(img_seta, pos_menu)
-        pygame.display.flip()
 
-    return personagens_selecionados
+def desenha_botoes(tela, personagens, screen_width, screen_height, cursor):
+    font = pygame.font.Font('fonts/god-of-war.ttf', 30)
+    cor_texto = (255, 255, 255)
+    cor_cursor = (255, 0, 0)
 
+    colunas = 5
+    linhas = 2
+    margem_horizontal = 100
+    margem_vertical = 150
 
-def move_seta(personagens, pos_menu, tecla):
-    if tecla == 'up':
-        if pos_menu[1] == personagens[3].posicao_menu[1] and pos_menu[0] == personagens[3].posicao_menu[0]:
-            pos_menu = (personagens[1].posicao_menu[0], personagens[1].posicao_menu[1])
-        elif pos_menu[1] == personagens[4].posicao_menu[1] and pos_menu[0] == personagens[4].posicao_menu[0]:
-            pos_menu = (personagens[2].posicao_menu[0], personagens[2].posicao_menu[1])
+    largura_espaco = (screen_width - 2 * margem_horizontal) // colunas
+    altura_espaco = (screen_height - 2 * margem_vertical) // linhas
 
-    elif tecla == 'down':
-        if ((pos_menu[1] == personagens[0].posicao_menu[1] and pos_menu[0] == personagens[0].posicao_menu[0]) or
-            (pos_menu[1] == personagens[1].posicao_menu[1] and pos_menu[0] == personagens[1].posicao_menu[0])):
-            pos_menu = (personagens[3].posicao_menu[0], personagens[3].posicao_menu[1])
-        elif pos_menu[1] == personagens[2].posicao_menu[1] and pos_menu[0] == personagens[2].posicao_menu[0]:
-           pos_menu = (personagens[4].posicao_menu[0], personagens[4].posicao_menu[1])
+    for i, personagem in enumerate(personagens):
+        coluna = i % colunas
+        linha = i // colunas
 
-    elif tecla == 'left':
-        if pos_menu[0] == personagens[0].posicao_menu[0] and pos_menu[1] == personagens[0].posicao_menu[1]:
-            pos_menu = (personagens[1].posicao_menu[0], personagens[1].posicao_menu[1])
-        elif pos_menu[0] == personagens[2].posicao_menu[0] and pos_menu[1] == personagens[2].posicao_menu[1]:
-            pos_menu = (personagens[0].posicao_menu[0], personagens[0].posicao_menu[1])
-        elif pos_menu[0] == personagens[4].posicao_menu[0] and pos_menu[1] == personagens[4].posicao_menu[1]:
-            pos_menu = (personagens[3].posicao_menu[0], personagens[3].posicao_menu[1])
+        posicao_botao = (
+            margem_horizontal + coluna * largura_espaco + largura_espaco // 2,
+            margem_vertical + linha * altura_espaco + altura_espaco // 2
+        )
 
-    elif tecla == 'right':
-        if pos_menu[0] == personagens[0].posicao_menu[0] and pos_menu[1] == personagens[0].posicao_menu[1]:
-            pos_menu = (personagens[2].posicao_menu[0], personagens[2].posicao_menu[1])
-        elif pos_menu[0] == personagens[1].posicao_menu[0] and pos_menu[1] == personagens[1].posicao_menu[1]:
-            pos_menu = (personagens[0].posicao_menu[0], personagens[0].posicao_menu[1])
-        elif pos_menu[0] == personagens[3].posicao_menu[0] and pos_menu[1] == personagens[3].posicao_menu[1]:
-            pos_menu = (personagens[4].posicao_menu[0], personagens[4].posicao_menu[1])
+        img_personagem = personagem.imagem_menu_selecionado if personagem.selecionado else personagem.imagem_menu
+        img_personagem = pygame.transform.scale(img_personagem, (150, 150))
+        tela.blit(img_personagem, (posicao_botao[0] - 75, posicao_botao[1] - 75))
+        personagem.posicao_menu = (posicao_botao[0] - x_seta_correcao, posicao_botao[1] - y_seta_correcao)
 
-    return pos_menu
+        texto_botao = font.render(personagem.nome, True, cor_texto)
+        largura_texto = texto_botao.get_width()
+        tela.blit(texto_botao, (posicao_botao[0] - largura_texto // 2, posicao_botao[1] + 80))
+
+        if i == cursor:  # Desenhar cursor
+            pygame.draw.rect(
+                tela, cor_cursor, 
+                (posicao_botao[0] - 80, posicao_botao[1] - 80, 160, 160), 3
+            )

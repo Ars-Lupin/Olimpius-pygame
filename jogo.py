@@ -2,9 +2,8 @@ import pygame # type: ignore
 from batalha import desenha_fundo, desenha_personagens, preenche_infos, desenha_inimigos
 from inimigos import Inimigo
 from personagem import Personagem
-from constants import largura_tela, altura_tela
 
-def realiza_batalha(tela, personagens_selecionados):
+def realiza_batalha(tela, personagens_selecionados, screen_width, screen_height):
     inimigos = Inimigo.cria_inimigos()
 
     while True:
@@ -22,8 +21,8 @@ def realiza_batalha(tela, personagens_selecionados):
         elif len(inimigos) <= 0 and len(personagens_selecionados) > 0:
             return True
 
-        desenha_fundo(tela, personagens_selecionados)
-        desenha_personagens(tela, personagens_selecionados)
+        desenha_fundo(tela, personagens_selecionados, screen_width, screen_height)
+        desenha_personagens(tela, personagens_selecionados, screen_width, screen_height)
         desenha_inimigos(tela, inimigos)
 
         turno = []
@@ -32,11 +31,11 @@ def realiza_batalha(tela, personagens_selecionados):
         turno.sort(key=lambda x: x.velocidade, reverse=True)
 
         posicoes_info = preenche_infos(tela, personagens_selecionados, turno[0])
-        seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, turno)
+        seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, turno, screen_width, screen_height)
 
         pygame.display.flip()
 
-def seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, turno):
+def seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, turno, screen_width, screen_height):
     img_seta = pygame.image.load('images/batalha/seta-escura.png')
     img_seta = pygame.transform.scale(img_seta, (300, 300))
     pos_menu = 0
@@ -66,12 +65,12 @@ def seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, tur
                             pos_menu -= 1
                     elif event.key == pygame.K_z:
                         if pos_menu == 0:
-                            atacou_inimigo = personagem_atual.ataca_inimigo(tela, inimigos, personagens_selecionados, personagem_atual)
+                            atacou_inimigo = personagem_atual.ataca_inimigo(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height)
                         elif pos_menu == 1:
                             personagem_atual.defende()
                         elif pos_menu == 2:
                             personagem_atual.habilidade()
-                            atacou_inimigo = personagem_atual.ataca_inimigo(tela, inimigos, personagens_selecionados, personagem_atual)
+                            atacou_inimigo = personagem_atual.ataca_inimigo(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height)
                             
                         if atacou_inimigo:
                             turno.pop(0)
@@ -82,8 +81,8 @@ def seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, tur
         if len(personagens_selecionados) <= 0 or len(inimigos) <= 0:
             return
 
-        desenha_fundo(tela, personagens_selecionados)
-        desenha_personagens(tela, personagens_selecionados)
+        desenha_fundo(tela, personagens_selecionados, screen_width, screen_height)
+        desenha_personagens(tela, personagens_selecionados, screen_width, screen_height)
         desenha_inimigos(tela, inimigos)
         posicoes_info = preenche_infos(tela, personagens_selecionados, personagem_atual)
 
@@ -102,20 +101,20 @@ def seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, tur
     Personagem.retira_defesa(personagens_selecionados)
     Personagem.retira_habilidade(personagens_selecionados)
 
-def tela_final(tela, personagens_selecionados, inimigos, mensagem):
+def tela_final(tela, personagens_selecionados, inimigos, mensagem, screen_width, screen_height):
     img_fundo = pygame.image.load('images/batalha/fundo-batalha.png')
-    img_fundo = pygame.transform.scale(img_fundo, (largura_tela, altura_tela))
+    img_fundo = pygame.transform.scale(img_fundo, (screen_width, screen_height))
     tela.blit(img_fundo, (0, 0))
 
     font = pygame.font.Font('fonts/god-of-war.ttf', 50)
     cor_texto = (255, 255, 255)
     texto = font.render(mensagem, True, cor_texto)
     largura_texto = texto.get_width()
-    posicao_texto = ((largura_tela - largura_texto) // 2, 200)
+    posicao_texto = ((screen_width - largura_texto) // 2, 200)
     tela.blit(texto, posicao_texto)
 
-    pos_x = largura_tela // 2 - 500
-    pos_y = altura_tela // 2 - 100
+    pos_x = screen_width // 2 - 500
+    pos_y = screen_height // 2 - 100
 
     if mensagem == 'Parabens, voce venceu!':
         for personagem in personagens_selecionados:

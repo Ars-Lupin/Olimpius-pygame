@@ -2,9 +2,9 @@ import pygame # type: ignore
 from pygame.locals import *
 from constants import largura_tela, altura_tela, x_info_batalha, y_info_batalha, x_info_personagens, y_info_personagens
 
-def desenha_fundo(tela, personagens_selecionados):
+def desenha_fundo(tela, personagens_selecionados, screen_width, screen_height):
     img_fundo = pygame.image.load('images/batalha/fundo-batalha.png')
-    img_fundo = pygame.transform.scale(img_fundo, (largura_tela, altura_tela))
+    img_fundo = pygame.transform.scale(img_fundo, (screen_width, screen_height))
     tela.blit(img_fundo, (0, 0))
 
     img_info_batalha = pygame.image.load('images/batalha/info-batalha.png')
@@ -13,7 +13,7 @@ def desenha_fundo(tela, personagens_selecionados):
     img_info_personagens = pygame.image.load('images/batalha/info-personagens.png')
     tela.blit(img_info_personagens, (x_info_personagens, y_info_personagens))
 
-def desenha_personagens(tela, personagens_selecionados):
+def desenha_personagens(tela, personagens_selecionados, screen_width, screen_height):
     pos_x = 150
     pos_y = 100
 
