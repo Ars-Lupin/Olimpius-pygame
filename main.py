@@ -1,4 +1,4 @@
-import pygame
+import pygame 
 from menu import desenha_menu
 from jogo import realiza_batalha, tela_final
 from inimigos import Inimigo
@@ -26,7 +26,7 @@ black = (0, 0, 0)
 gray = (100, 100, 100)
 gold = (254, 181, 70)
 
-def fade_transition(screen, image, fade_speed=5):
+def fade_transition(screen, image, fade_speed=15):
     """
     Aplica um efeito de fade-out e fade-in para a transição de menus.
     """
@@ -54,84 +54,173 @@ start_time = pygame.time.get_ticks()
 while running:
     screen.blit(menu_theme_image, (0, 0))
 
-    # Renderiza a mensagem com o efeito de dissolução
-    mensagem = font.render("Pressione qualquer tecla para continuar", True, gold)
-    mensagem_rect = mensagem.get_rect(center=(screen_width // 2, (screen_height // 2) + 250))
-    screen.blit(mensagem, mensagem_rect)
-    pygame.display.flip()
+
 
     # Espera por uma tecla após 2 segundos
-    if pygame.time.get_ticks() - start_time > 2500:
+    if pygame.time.get_ticks() - start_time > 3000:
+        # Renderiza a mensagem com o efeito de dissolução
+        mensagem = font.render("Pressione qualquer tecla para continuar", True, gold)
+        mensagem_rect = mensagem.get_rect(center=(screen_width // 2, (screen_height // 2) + 250))
+        screen.blit(mensagem, mensagem_rect)
+        pygame.display.flip()
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
-            if event.type == KEYDOWN:
+            if event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
                 running = False  # Fecha o loop após pressionar uma tecla
 
 font = pygame.font.Font('fonts/god-of-war.ttf', 60) 
 menu_options = ["Solo", "Dois Jogadores", "Sair"]
 selected_option = 0
+fade_transition(screen, menu_theme_image)
 
-running = True
-while running:
-    # Carregar e exibir a imagem do menu
-    menu_theme_image = pygame.image.load('images/menu/menu-modo-de-jogo.png')
-    menu_theme_image = pygame.transform.scale(menu_theme_image, (screen_width, screen_height))
-    screen.blit(menu_theme_image, (0, 0))
+def menu_principal():
+    """Função principal do menu do jogo."""
+    global screen
 
-    # Renderizar opções do menu centralizadas com retângulos dourados
-    for i, option in enumerate(menu_options):
-        color = black if i == selected_option else gold
-        text = font.render(option, True, color)
-        text_rect = text.get_rect(center=(screen_width // 2, screen_height // 2 - 100 + i * 80))
+    menu_options = ["Solo", "Dois Jogadores", "Sair"]
+    selected_option = 0
 
-        # Desenhar retângulo dourado ao redor da opção selecionada
-        if i == selected_option:
-            pygame.draw.rect(screen, gold, text_rect.inflate(20, 10), border_radius=5, width=3)
+    while True:
+        menu_theme_image = pygame.image.load('images/menu/menu-modo-de-jogo.png')
+        menu_theme_image = pygame.transform.scale(menu_theme_image, (screen_width, screen_height))
+        screen.blit(menu_theme_image, (0, 0))
 
-        screen.blit(text, text_rect.topleft)
 
-    pygame.display.flip()
+        for i, option in enumerate(menu_options):
+            color = black if i == selected_option else gold
+            text = font.render(option, True, color)
+            text_rect = text.get_rect(center=(screen_width // 2, screen_height // 2 - 100 + i * 80))
 
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            running = False
-        if event.type == KEYDOWN:
-            if event.key == K_DOWN:
-                selected_option = (selected_option + 1) % len(menu_options)
-            elif event.key == K_UP:
-                selected_option = (selected_option - 1) % len(menu_options)
-            elif event.key in [K_RETURN, K_c]:
-                fade_transition(screen, menu_theme_image)
-                if selected_option == 0:
-                    print("Modo Solo selecionado")
-                    run = True
-                    clock = pygame.time.Clock()
+            if i == selected_option:
+                pygame.draw.rect(screen, gold, text_rect.inflate(20, 10), border_radius=5, width=3)
 
-                    while run:
-                        for event in pygame.event.get():
-                            if event.type == pygame.QUIT:
-                                run = False
+            screen.blit(text, text_rect.topleft)
 
-                        personagens_selecionados = desenha_menu(screen, screen_width, screen_height)
-                        personagens_selecionados_copy = copy.copy(personagens_selecionados)
-                        inimigos = Inimigo.cria_inimigos()
-                        ganhou = realiza_batalha(screen, personagens_selecionados, screen_width, screen_height)
+        pygame.display.flip()
+        
 
-                        if ganhou:
-                            mensagem = 'Parabens, voce venceu!'
-                        else:
-                            mensagem = 'Tente novamente, você perdeu!'
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_DOWN:
+                    selected_option = (selected_option + 1) % len(menu_options)
+                elif event.key == K_UP:
+                    selected_option = (selected_option - 1) % len(menu_options)
+                elif event.key in [K_RETURN, K_c]:
+                    fade_transition(screen, menu_theme_image)
+                    if selected_option == 0:
+                        iniciar_jogo()
+                    elif selected_option == 1:
+                        print("Modo Dois Jogadores selecionado")  # Adicione lógica apropriada aqui
+                    elif selected_option == 2:
+                        pygame.quit()
+                        exit()
+                        
+            if event.type == MOUSEMOTION:
+                mouse_x, mouse_y = event.pos
+                for i, option in enumerate(menu_options):
+                    option_rect = font.render(option, True, gold).get_rect(center=(screen_width // 2, screen_height // 2 - 100 + i * 80))
+                    if option_rect.collidepoint(mouse_x, mouse_y):
+                        selected_option = i  # Alterar a seleção com o mouse
+                        break
+                    
+            if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                for i, option in enumerate(menu_options):
+                    option_rect = font.render(option, True, gold).get_rect(
+                        center=(screen_width // 2, screen_height // 2 - 100 + i * 80)
+                    )
+                    if option_rect.collidepoint(event.pos):
+                        selected_option = i
+                        fade_transition(screen, menu_theme_image)
+                        if selected_option == 0:
+                            iniciar_jogo()
+                        elif selected_option == 1:
+                            print("Modo Dois Jogadores selecionado")  # Adicione lógica apropriada aqui
+                        elif selected_option == 2:
+                            pygame.quit()
+                            exit()
 
-                        tela_final(screen, personagens_selecionados_copy, inimigos, mensagem, screen_width, screen_height)
-                        pygame.display.flip()
-                        clock.tick(60)
 
-                    pygame.quit()
-                elif selected_option == 1:
-                    print("Modo Dois Jogadores selecionado")
-                    # Implementar a lógica do modo de dois jogadores
-                elif selected_option == 2:
-                    running = False
+def iniciar_jogo():
+    """Inicia o jogo e gerencia vitória ou derrota."""
+    clock = pygame.time.Clock()
+    while True:
+        personagens_selecionados = desenha_menu(screen, screen_width, screen_height)
+        if personagens_selecionados is None:
+            break  # Volta para o menu principal
 
-pygame.quit()
+        personagens_selecionados_copy = copy.copy(personagens_selecionados)
+        inimigos = Inimigo.cria_inimigos()
+        ganhou = realiza_batalha(screen, personagens_selecionados, screen_width, screen_height)
+
+        if ganhou:
+            mensagem = 'Parabens, voce venceu!'
+        else:
+            mensagem = 'Você perdeu! Deseja tentar novamente?'
+
+        tela_final(screen, personagens_selecionados_copy, inimigos, mensagem, screen_width, screen_height)
+        opcao_pos_batalha = menu_pos_batalha(mensagem)
+
+        if opcao_pos_batalha == "jogar":
+            continue  # Reinicia a batalha
+        elif opcao_pos_batalha == "menu":
+            break  # Retorna ao menu principal
+        elif opcao_pos_batalha == "sair":
+            pygame.quit()
+            exit()
+
+        clock.tick(60)
+
+
+def menu_pos_batalha(mensagem): 
+    """Menu após a batalha, oferecendo opções de jogar novamente, voltar ao menu ou sair."""
+    menu_options = ["Jogar Novamente", "Voltar ao Menu", "Sair"]
+    selected_option = 0
+
+    while True:
+        # Calcula o tamanho do fundo com base nas opções
+        max_text_width = max(font.size(option)[0] for option in menu_options)
+        text_height = font.size(menu_options[0])[1]
+        box_width = max_text_width + 100
+        box_height = (text_height + 20) * len(menu_options) + 40
+
+        # Fundo da mensagem semi-transparente
+        background_surface = pygame.Surface((box_width, box_height), pygame.SRCALPHA)
+        background_surface.fill((50, 50, 50, 200))  # Cinza escuro semi-transparente
+        pygame.draw.rect(background_surface, (150, 150, 150, 200), (0, 0, box_width, box_height), 5)
+        screen.blit(background_surface, (screen_width // 2 - box_width // 2, screen_height // 2 - box_height // 2))
+
+        # Renderiza o texto das opções
+        for i, option in enumerate(menu_options):
+            color = gold if i == selected_option else white
+            text = font.render(option, True, color)
+            text_rect = text.get_rect(center=(screen_width // 2, screen_height // 2 - (len(menu_options) * text_height // 2) + i * (text_height + 20)))
+            screen.blit(text, text_rect)
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_DOWN:
+                    selected_option = (selected_option + 1) % len(menu_options)
+                elif event.key == K_UP:
+                    selected_option = (selected_option - 1) % len(menu_options)
+                elif event.key == K_RETURN:
+                    if selected_option == 0:
+                        return "jogar"
+                    elif selected_option == 1:
+                        return "menu"
+                    elif selected_option == 2:
+                        return "sair"
+
+
+
+# Iniciar o programa principal
+if __name__ == "__main__":
+    menu_principal()

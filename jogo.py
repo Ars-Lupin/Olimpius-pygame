@@ -23,14 +23,14 @@ def realiza_batalha(tela, personagens_selecionados, screen_width, screen_height)
 
         desenha_fundo(tela, personagens_selecionados, screen_width, screen_height)
         desenha_personagens(tela, personagens_selecionados, screen_width, screen_height)
-        desenha_inimigos(tela, inimigos)
+        desenha_inimigos(tela, inimigos, screen_width, screen_height)
 
         turno = []
         turno.extend(personagens_selecionados)
         turno.extend(inimigos)
         turno.sort(key=lambda x: x.velocidade, reverse=True)
 
-        posicoes_info = preenche_infos(tela, personagens_selecionados, turno[0])
+        posicoes_info = preenche_infos(tela, personagens_selecionados, turno[0], screen_width, screen_height)
         seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, turno, screen_width, screen_height)
 
         pygame.display.flip()
@@ -83,8 +83,8 @@ def seleciona_opcao(tela, personagens_selecionados, inimigos, posicoes_info, tur
 
         desenha_fundo(tela, personagens_selecionados, screen_width, screen_height)
         desenha_personagens(tela, personagens_selecionados, screen_width, screen_height)
-        desenha_inimigos(tela, inimigos)
-        posicoes_info = preenche_infos(tela, personagens_selecionados, personagem_atual)
+        desenha_inimigos(tela, inimigos, screen_width, screen_height)
+        posicoes_info = preenche_infos(tela, personagens_selecionados, personagem_atual, screen_width, screen_height)
 
         if not personagem_is_inimigo:
             tela.blit(img_seta, posicoes_info[pos_menu])
