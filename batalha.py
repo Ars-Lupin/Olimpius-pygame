@@ -1,4 +1,5 @@
 import pygame
+from ataques import Ataque
 from pygame.locals import *
 
 def desenha_fundo(tela,personagens_selecionados, screen_width, screen_height):
@@ -77,43 +78,73 @@ def desenha_inimigos(tela, inimigos, screen_width, screen_height):
                 border_radius=10
             )
 
-def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_width, screen_height):
-    font = pygame.font.Font('fonts/god-of-war.ttf', 30)
+def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_width, screen_height): 
+    """
+    Preenche as informações da tela de batalha, exibindo os ataques do personagem atual.
+    Mostra 6 opções de ataques posicionados dentro de info-batalha.png.
+    """
+    font = pygame.font.Font('fonts/Dalek.ttf', 15)
     cor_texto = (255, 255, 255)
     posicoes_info = []
 
-    if personagem_atual in personagens_selecionados:
-        personagem = font.render(f"{personagem_atual.nome}'s turn!", True, cor_texto)
-        ataque = font.render(f'Attack', True, cor_texto)
-        defesa = font.render(f'Defend', True, cor_texto)
-        habilidade = font.render('Skill', True, cor_texto)
+    # Carregar ataques do personagem atual
+    ataques = Ataque.cria_ataques(personagem_atual.nome)
 
-        posicao_ataque = (screen_width * 0.05 + 60, screen_height * 0.8 + 40 + personagem.get_height())
-        posicao_defesa = (screen_width * 0.05 + ataque.get_width() + 140, screen_height * 0.8 + 40 + personagem.get_height())
-        posicao_habilidade = (screen_width * 0.05 + ataque.get_width() + defesa.get_width() + 220, screen_height * 0.8 + 40 + personagem.get_height())
+    # Carregar a imagem base (info-batalha.png)
+    imagem_base = pygame.image.load('images/batalha/info-batalha.png').convert_alpha()
+    largura_base, altura_base = imagem_base.get_size()
 
-        tela.blit(personagem, (screen_width * 0.05 + 60, screen_height * 0.8 + 10))
-        tela.blit(ataque, posicao_ataque)
-        tela.blit(defesa, posicao_defesa)
-        tela.blit(habilidade, posicao_habilidade)
+    # Posição da imagem base
+    img_info_batalha_pos = (screen_width * 0.05, screen_height * 0.8)
+    tela.blit(imagem_base, img_info_batalha_pos)
 
-        posicao_ataque_seta = (screen_width * 0.05 + 60 - 75, screen_height * 0.8 + 40 + personagem.get_height() - 65)
-        posicao_defesa_seta = (screen_width * 0.05 + ataque.get_width() + 140 - 75, screen_height * 0.8 + 40 + personagem.get_height() - 60)
-        posicao_habilidade_seta = (screen_width * 0.05 + ataque.get_width() + defesa.get_width() + 220 - 75, screen_height * 0.8 + 40 + personagem.get_height() - 65)
-        posicoes_info.extend([posicao_ataque_seta, posicao_defesa_seta, posicao_habilidade_seta])
-    else:
-        inimigo = font.render(f"{personagem_atual.nome}'s turn!", True, cor_texto)
-        tela.blit(inimigo, (screen_width * 0.05 + 60, screen_height * 0.8 + 10))
+    # Calcular área disponível dentro da imagem base
+    margem_horizontal = 10  # Espaço horizontal nas bordas
+    margem_vertical = 10  # Espaço vertical nas bordas
+    largura_disponivel = largura_base - 2 * margem_horizontal
+    altura_disponivel = altura_base - 2 * margem_vertical
 
+    # Dimensões dos botões - aumentadas
+    largura_botao = (largura_disponivel // 3) - 5  # Maior largura dos botões
+    altura_botao = (altura_disponivel // 2) - 5  # Maior altura dos botões
+
+    # Posição inicial para o primeiro botão
+    pos_x_inicial = img_info_batalha_pos[0] + margem_horizontal
+    pos_y_inicial = img_info_batalha_pos[1] + margem_vertical
+
+    # Gerar botões (3 em cima, 3 embaixo)
+    for i, ataque in enumerate(ataques[:6]):  # Limitar a 6 ataques
+        # Calcular linha e coluna
+        linha = i // 3  # 0 para primeira linha, 1 para segunda linha
+        coluna = i % 3  # 0, 1, 2 para cada coluna
+
+        # Calcular posição do botão
+        pos_x = pos_x_inicial + coluna * (largura_botao + 5)  # Aumentado espaçamento horizontal
+        pos_y = pos_y_inicial + linha * (altura_botao + 5)   # Aumentado espaçamento vertical
+
+        # Desenhar retângulo do botão (simula info-batalha reduzido)
+        pygame.draw.rect(tela, (128, 128, 128), (pos_x, pos_y, largura_botao, altura_botao), border_radius=4)
+
+        # Adicionar texto do ataque no centro do botão
+        texto_ataque = font.render(ataque.nome, True, cor_texto)
+        texto_pos_x = pos_x + (largura_botao - texto_ataque.get_width()) // 2
+        texto_pos_y = pos_y + (altura_botao - texto_ataque.get_height()) // 2
+        tela.blit(texto_ataque, (texto_pos_x, texto_pos_y))
+
+        # Salvar posição para interações futuras
+        posicoes_info.append((pos_x, pos_y, largura_botao, altura_botao))
+
+    # Renderizar informações dos personagens selecionados
     font = pygame.font.Font('fonts/god-of-war.ttf', 24)
     pos_x = screen_width * 0.5 - 90
     pos_y = screen_height * 0.85 - 20
 
     for personagem in personagens_selecionados:
         nome = font.render(personagem.nome, True, cor_texto)
-        vida = font.render(f'{personagem.vida}  /  {personagem.vida_max}', True, (255, 0, 0))
+        vida = font.render(f'{personagem.vida} / {personagem.vida_max}', True, (255, 0, 0))
         tela.blit(nome, (pos_x, pos_y))
         tela.blit(vida, (pos_x + 140, pos_y))
         pos_y += 40
 
     return posicoes_info
+

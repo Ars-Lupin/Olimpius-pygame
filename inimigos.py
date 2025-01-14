@@ -40,7 +40,7 @@ class Inimigo:
     
     def ataca_personagem(self, personagens_selecionados):
         personagem = personagens_selecionados[random.randint(0, len(personagens_selecionados) - 1)]
-        dano = round(self.ataque * (50 / (50 + personagem.defesa)))
+        dano = round(self.ataque * (50 / (50 + personagem.resistencia)))
         personagem.vida -= dano
 
         if personagem.vida <= 0:
