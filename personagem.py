@@ -42,6 +42,8 @@ class Personagem:
         self.esta_vivo = True
         self.imagem_menu = pygame.image.load(src_imagem_menu)
         self.imagem_menu_selecionado = pygame.image.load(src_imagem_menu_selecionado)
+        self.robos_ativos = [] if nome == "Hefesto" else None
+        
 
     def exibir_imagem(self, tela, pos_x, pos_y):
         tela.blit(self.imagem, (pos_x, pos_y))

@@ -36,6 +36,11 @@ def desenha_personagens(tela, personagens_selecionados, screen_width, screen_hei
         else:
             personagem.esta_vivo = False
             personagens_selecionados.remove(personagem)
+            
+        if personagem.nome == "Hefesto":
+            for robo in personagem.robos_ativos:  # Lista de robôs ativos de Hefesto
+                if robo.esta_vivo:
+                    robo.desenhar(tela)
 
 def desenha_inimigos(tela, inimigos, screen_width, screen_height):
     pos_x = screen_width * 0.6
