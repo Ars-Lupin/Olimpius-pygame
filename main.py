@@ -13,6 +13,7 @@ info = pygame.display.Info()
 screen_width = info.current_w
 screen_height = info.current_h
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+print(screen_width, screen_height)
 pygame.display.set_caption("Menu do Jogo - Olimpius")
 
 # Carregar imagem tema para o menu

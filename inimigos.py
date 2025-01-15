@@ -24,6 +24,8 @@ class Inimigo:
         self.velocidade = velocidade
         self.imagem = pygame.image.load(src_imagem)
         self.posicao_batalha = None
+        self.x = 0
+        self.y = 0
 
         if self.nome == 'Cerbero':
             self.imagem = pygame.transform.scale(self.imagem, (150, 150))

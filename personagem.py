@@ -43,7 +43,8 @@ class Personagem:
         self.imagem_menu = pygame.image.load(src_imagem_menu)
         self.imagem_menu_selecionado = pygame.image.load(src_imagem_menu_selecionado)
         self.robos_ativos = [] if nome == "Hefesto" else None
-        
+        self.x = 0
+        self.y = 0
 
     def exibir_imagem(self, tela, pos_x, pos_y):
         tela.blit(self.imagem, (pos_x, pos_y))
@@ -62,7 +63,7 @@ class Personagem:
             Personagem('Demeter', 70, 70, 130, 70, 85, 160, 110, 'images/batalha/demeter.png', 'images/menu/demeter-menu.png', 'images/menu/demeter-menu-selecionado.png', Ataque.cria_ataques('Demeter'), Defesa.cria_defesas('Demeter')),
             Personagem('Dionisio', 80, 70, 130, 70, 80, 170, 120, 'images/batalha/dionisio.png', 'images/menu/dionisio-menu.png', 'images/menu/dionisio-menu-selecionado.png', Ataque.cria_ataques('Dionisio'), Defesa.cria_defesas('Dionisio')),
             Personagem('Draktel', 90, 80, 160, 60, 70, 180, 130, 'images/batalha/draktel.png', 'images/menu/draktel-menu.png', 'images/menu/draktel-menu-selecionado.png', Ataque.cria_ataques('Draktel'), Defesa.cria_defesas('Draktel')),
-            Personagem('Hades', 95, 70, 170, 60, 85, 200, 140, 'images/batalha/hades-heroi.png', 'images/menu/hades-menu.png', 'images/menu/hades-menu-selecionado.png', Ataque.cria_ataques('Hades'), Defesa.cria_defesas('Hades')),
+            Personagem('Hades', 95, 70, 170, 60, 85, 200, 140, 'images/batalha/hades.png', 'images/menu/hades-menu.png', 'images/menu/hades-menu-selecionado.png', Ataque.cria_ataques('Hades'), Defesa.cria_defesas('Hades')),
             Personagem('Hefesto', 70, 80, 150, 50, 80, 190, 140, 'images/batalha/hefesto.png', 'images/menu/hefesto-menu.png', 'images/menu/hefesto-menu-selecionado.png', Ataque.cria_ataques('Hefesto'), Defesa.cria_defesas('Hefesto')),
             Personagem('Hera', 65, 75, 140, 75, 80, 170, 120, 'images/batalha/hera.png', 'images/menu/hera-menu.png', 'images/menu/hera-menu-selecionado.png', Ataque.cria_ataques('Hera'), Defesa.cria_defesas('Hera')),
             Personagem('Hercules', 100, 90, 200, 50, 85, 210, 150, 'images/batalha/hercules.png', 'images/menu/hercules-menu.png', 'images/menu/hercules-menu-selecionado.png', Ataque.cria_ataques('Hercules'), Defesa.cria_defesas('Hercules')),

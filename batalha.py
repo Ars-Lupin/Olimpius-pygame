@@ -20,15 +20,15 @@ def desenha_fundo(tela,personagens_selecionados, screen_width, screen_height):
     tela.blit(img_info_personagens, img_info_personagens_pos)
 
 def desenha_personagens(tela, personagens_selecionados, screen_width, screen_height):
-    pos_x = screen_width * 0.15
+    pos_x = screen_width * 0.2
     pos_y = screen_height * 0.2
 
     for i, personagem in enumerate(personagens_selecionados):
         if i == 1:
-            pos_x = screen_width * 0.05
+            pos_x = screen_width * 0.03
             pos_y += screen_height * 0.15
         elif i == 2:
-            pos_x += screen_width * 0.15
+            pos_x = screen_width * 0.2
             pos_y += screen_height * 0.17
 
         if personagem.vida > 0:
@@ -36,7 +36,10 @@ def desenha_personagens(tela, personagens_selecionados, screen_width, screen_hei
         else:
             personagem.esta_vivo = False
             personagens_selecionados.remove(personagem)
-            
+
+        personagem.x = pos_x
+        personagem.y = pos_y
+        
         if personagem.nome == "Hefesto":
             for robo in personagem.robos_ativos:  # Lista de robôs ativos de Hefesto
                 if robo.esta_vivo:
@@ -50,17 +53,24 @@ def desenha_inimigos(tela, inimigos, screen_width, screen_height):
         if i == 0 and inimigo.nome == 'Cerbero':
             pos_x = screen_width * 0.65
             pos_y += screen_height * 0.05
+            inimigo.x = pos_x
+            inimigo.y = pos_y
         elif i == 1:
             pos_x = screen_width * 0.65
             pos_y += screen_height * 0.25
+            inimigo.x = pos_x
+            inimigo.y = pos_y
 
         if inimigo.vida > 0:
-            tela.blit(inimigo.imagem, (pos_x, pos_y))
+            # Inverter a imagem horizontalmente
+            imagem_invertida = pygame.transform.flip(inimigo.imagem, True, False)
+            tela.blit(imagem_invertida, (pos_x, pos_y))
         else:
             inimigo.esta_vivo = False
             inimigos.remove(inimigo)
             continue
 
+        # Desenhar a barra de vida
         img_hp_vazio = pygame.image.load('images/batalha/hp-vazio.png')
         img_hp_vazio = pygame.transform.scale(img_hp_vazio, (inimigo.vida_max + 50, 40))
 
@@ -83,6 +93,7 @@ def desenha_inimigos(tela, inimigos, screen_width, screen_height):
                 border_radius=10
             )
 
+
 def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_width, screen_height): 
     """
     Preenche as informações da tela de batalha, exibindo os ataques do personagem atual.
@@ -93,7 +104,7 @@ def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_widt
     posicoes_info = []
 
     # Carregar ataques do personagem atual
-    ataques = Ataque.cria_ataques(personagem_atual.nome)
+    ataques = personagem_atual.lista_ataques
 
     # Carregar a imagem base (info-batalha.png)
     imagem_base = pygame.image.load('images/batalha/info-batalha.png').convert_alpha()

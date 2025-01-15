@@ -1,5 +1,7 @@
 import random
 import pygame
+import os
+from pygame.locals import *  
 class Ataque:
     """
     Classe para gerenciar os ataques de cada personagem.
@@ -38,13 +40,28 @@ class Ataque:
             largura_barra = 100
             altura_barra = 10
             vida_ratio = max(0, self.vida / self.vida_max)
-            pygame.draw.rect(tela, (255, 0, 0), (550, 420, largura_barra, altura_barra))  # Barra total
-            pygame.draw.rect(tela, (0, 255, 0), (550, 420, largura_barra * vida_ratio, altura_barra))  # Vida restante
+            pygame.draw.rect(tela, (255, 0, 0), (self.x + 50, self.y-200, largura_barra, altura_barra))  # Barra total
+            pygame.draw.rect(tela, (0, 255, 0), (self.x + 50, self.y-200, largura_barra * vida_ratio, altura_barra))  # Vida restante
 
         def receber_dano(self, dano):
             self.vida -= dano
             if self.vida <= 0:
                 self.esta_vivo = False
+    
+    @staticmethod         
+    def exibir_animacao(tela, caminho_pasta, pos_x, pos_y, frame_rate=0.1):
+        quadros = sorted([
+            os.path.join(caminho_pasta, f)
+            for f in os.listdir(caminho_pasta)
+            if f.endswith('.png') or f.endswith('.jpg')
+        ])
+        
+        for quadro in quadros:
+            imagem = pygame.image.load(quadro)
+            imagem = pygame.transform.scale(imagem, (200, 200))
+            tela.blit(imagem, (pos_x, pos_y))
+            pygame.display.update()
+            pygame.time.delay(int(frame_rate * 1000))
 
 
     def uso(self, tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
@@ -91,7 +108,14 @@ class Ataque:
                 Ataque('Criação divina', Ataque.criar_robos),
                 Ataque('Destruir pra construir', Ataque.destruir_pra_construir),
             ],
-            'Hercules': None,
+            'Hercules': [                
+                Ataque('Touro de Creta', Ataque.flecha_solar),
+                Ataque('Cavalos de Diomedes', Ataque.explosao_solar),
+                Ataque('Aves do lago Estínfalo', Ataque.musica_curativa),
+                Ataque('Luz da Verdade', Ataque.luz_da_verdade),
+                Ataque('Chuva de Flechas', Ataque.chuva_de_flechas),
+                Ataque('Aura Radiante', Ataque.aura_radiante),
+                ],
             'Hermes': None,
             'Luna': None,
             'Pantheon': None,
@@ -252,19 +276,24 @@ class Ataque:
     def matador_de_chronos(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Matador de Chronos!")
         for inimigo in inimigos:
-            inimigo.vida -= 30
+            inimigo.vida -= 90
             
     @staticmethod
     def tremores_da_alma(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Tremores da Alma!")
         for inimigo in inimigos:
             inimigo.vida -= 25
-            
-    @staticmethod
+
     def julgamento_divino(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Julgamento Divino!")
+        
+        pos_x = screen_width * 0.65
+        pos_y += screen_height * 0.25
+        
+        Ataque.exibir_animacao(tela, 'images/poderes/julgamento_divino', pos_x, pos_y)
+        
         for inimigo in inimigos:
-            inimigo.vida -= 30
+            inimigo.vida -= 80
             
     @staticmethod
     def soco(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
@@ -331,10 +360,16 @@ class Ataque:
         robo_nome = random.choice(robos_restantes)
         dados_robo = robos_disponiveis[robo_nome]
         caminho_imagem = dados_robo['imagem']
-        x = random.randint(100, screen_width - 150)
-        y = random.randint(200, screen_height - 500)
-
-        # Cria a instância do robô
+        if len(personagem_atual.robos_ativos) == 0:
+            x = personagem_atual.x + 150
+            y = personagem_atual.y - 50
+        elif len(personagem_atual.robos_ativos) == 1:
+            x = personagem_atual.x + 250
+            y = personagem_atual.y + 0
+        else:  
+            x = personagem_atual.x + 150
+            y = personagem_atual.y + 50
+        
         robo = Ataque.Robo(
             robo_nome,
             dados_robo['forca'],
@@ -352,7 +387,7 @@ class Ataque:
         personagem_atual.robos_ativos.append(robo)
 
         # Adiciona os ataques específicos do robô à lista de ataques do personagem
-        personagem_atual.lista_ataques.expand(ataques_especificos[robo_nome])
+        personagem_atual.lista_ataques.extend(ataques_especificos[robo_nome])
 
         # Efeito nos inimigos (reduzindo vida)
         for inimigo in inimigos:
