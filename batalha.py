@@ -1,5 +1,4 @@
 import pygame
-from ataques import Ataque
 from pygame.locals import *
 
 def desenha_fundo(tela,personagens_selecionados, screen_width, screen_height):
@@ -76,6 +75,8 @@ def desenha_inimigos(tela, inimigos, screen_width, screen_height):
 
         if inimigo.nome == 'Hades':
             inimigo.posicao_batalha = (pos_x - 110, pos_y - 30)
+            inimigo.x = pos_x - 110
+            inimigo.y = pos_y - 30
             tela.blit(img_hp_vazio, (pos_x + 205, pos_y + 102))
             pygame.draw.rect(
                 tela,
@@ -85,6 +86,8 @@ def desenha_inimigos(tela, inimigos, screen_width, screen_height):
             )
         elif inimigo.nome == 'Cerbero':
             inimigo.posicao_batalha = (pos_x - 160, pos_y - 70)
+            inimigo.x = pos_x - 160
+            inimigo.y = pos_y - 70
             tela.blit(img_hp_vazio, (pos_x + 155, pos_y + 20))
             pygame.draw.rect(
                 tela,
@@ -99,6 +102,7 @@ def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_widt
     Preenche as informações da tela de batalha, exibindo os ataques do personagem atual.
     Mostra 6 opções de ataques posicionados dentro de info-batalha.png.
     """
+    from ataques import Ataque
     font = pygame.font.Font('fonts/Dalek.ttf', 15)
     cor_texto = (255, 255, 255)
     posicoes_info = []

@@ -70,11 +70,19 @@ def jogador_realiza_acao(tela, personagens_selecionados, inimigos, personagem_at
                 elif event.key == pygame.K_LEFT:
                     if pos_menu > 0:
                         pos_menu -= 1
-                elif event.key == pygame.K_z or event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.key in [pygame.K_RETURN, pygame.K_c, pygame.K_KP0]:
                     # Ativa o poder selecionado
                     poder_selecionado = poderes[pos_menu]
                     poder_selecionado.uso(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height)
                     return
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  
+                        
+                        x, y = event.pos
+                        if check_mouse_over_poderes(x, y, posicoes_info): 
+                            poder_selecionado = poderes[pos_menu]
+                            poder_selecionado.uso(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height)
+                            return
 
             # Mouse selecionando
             elif event.type == pygame.MOUSEMOTION:

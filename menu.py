@@ -175,7 +175,7 @@ def desenha_abas(tela, personagens, screen_width, screen_height):
                     cursor = max(0, cursor - 1)
                 elif event.key in [pygame.K_RIGHT, pygame.K_d]:
                     cursor = min(len(grupos_personagens[aba_atual]) - 1, cursor + 1)
-                elif event.key == pygame.K_RETURN:
+                elif event.key in [pygame.K_RETURN, pygame.K_c, pygame.K_KP0]:
                     personagem = grupos_personagens[aba_atual][cursor]
                     if personagem not in selecionados and len(selecionados) < 3:
                         personagem.selecionado = True

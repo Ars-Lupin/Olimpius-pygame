@@ -1,7 +1,8 @@
 import random
 import pygame
 import os
-from pygame.locals import *  
+from pygame.locals import *
+
 class Ataque:
     """
     Classe para gerenciar os ataques de cada personagem.
@@ -11,6 +12,57 @@ class Ataque:
         self.nome = nome
         self.funcao = funcao
         
+    class Animacao:
+        @staticmethod
+        def exibir_animacao(
+            tela,
+            caminho_pasta,
+            pos_x,
+            pos_y,
+            frame_rate=0.025,
+            modo='estatico',
+            destino=None,
+            personagens_selecionados=None,
+            inimigos=None,
+            screen_width=None,
+            screen_height=None,
+        ):
+            from batalha import desenha_fundo, desenha_personagens, desenha_inimigos
+            quadros = sorted([
+                os.path.join(caminho_pasta, f)
+                for f in os.listdir(caminho_pasta)
+                if f.endswith('.png') or f.endswith('.jpg')
+            ])
+            
+            # Variáveis para o modo móvel
+            if modo == 'movel' and destino:
+                destino_x, destino_y = destino
+                dx = (destino_x - pos_x) / len(quadros)
+                dy = (destino_y - pos_y) / len(quadros)
+            
+            # Iterar pelos quadros
+            for quadro in quadros:
+                # Redesenhar os elementos na tela
+
+                desenha_fundo(tela, personagens_selecionados, screen_width, screen_height)
+                desenha_personagens(tela, personagens_selecionados, screen_width, screen_height)
+                desenha_inimigos(tela, inimigos, screen_width, screen_height)
+
+                # Carregar o quadro atual
+                imagem = pygame.image.load(quadro)
+                imagem = pygame.transform.scale(imagem, (200, 200))
+
+                # Atualizar posição no modo móvel
+                if modo == 'movel' and destino:
+                    pos_x += dx
+                    pos_y += dy
+
+                # Desenhar a imagem atual
+                tela.blit(imagem, (pos_x + 200, pos_y))
+                pygame.display.update()
+                pygame.time.delay(0)
+
+            
     class Robo:
         def __init__(self, nome, forca, magia, controle, resistencia, velocidade, vigor, vida, src_imagem, x, y):
             self.nome = nome
@@ -40,28 +92,14 @@ class Ataque:
             largura_barra = 100
             altura_barra = 10
             vida_ratio = max(0, self.vida / self.vida_max)
-            pygame.draw.rect(tela, (255, 0, 0), (self.x + 50, self.y-200, largura_barra, altura_barra))  # Barra total
-            pygame.draw.rect(tela, (0, 255, 0), (self.x + 50, self.y-200, largura_barra * vida_ratio, altura_barra))  # Vida restante
+            pygame.draw.rect(tela, (255, 0, 0), (self.x + 50, self.y + 40, largura_barra, altura_barra))  # Barra total
+            pygame.draw.rect(tela, (0, 255, 0), (self.x + 50, self.y + 40, largura_barra * vida_ratio, altura_barra))  # Vida restante
 
         def receber_dano(self, dano):
             self.vida -= dano
             if self.vida <= 0:
                 self.esta_vivo = False
     
-    @staticmethod         
-    def exibir_animacao(tela, caminho_pasta, pos_x, pos_y, frame_rate=0.1):
-        quadros = sorted([
-            os.path.join(caminho_pasta, f)
-            for f in os.listdir(caminho_pasta)
-            if f.endswith('.png') or f.endswith('.jpg')
-        ])
-        
-        for quadro in quadros:
-            imagem = pygame.image.load(quadro)
-            imagem = pygame.transform.scale(imagem, (200, 200))
-            tela.blit(imagem, (pos_x, pos_y))
-            pygame.display.update()
-            pygame.time.delay(int(frame_rate * 1000))
 
 
     def uso(self, tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
@@ -287,12 +325,20 @@ class Ataque:
     def julgamento_divino(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Julgamento Divino!")
         
-        pos_x = screen_width * 0.65
-        pos_y += screen_height * 0.25
-        
-        Ataque.exibir_animacao(tela, 'images/poderes/julgamento_divino', pos_x, pos_y)
-        
         for inimigo in inimigos:
+        # Exibir animação móvel do personagem até o inimigo
+            Ataque.Animacao.exibir_animacao(
+                tela=tela,
+                caminho_pasta='images/poderes/julgamento_divino',
+                pos_x=inimigo.x,
+                pos_y=inimigo.y,
+                modo='movel',
+                destino=inimigo.posicao_batalha,
+                personagens_selecionados=personagens_selecionados,
+                inimigos=inimigos,
+                screen_width=screen_width,
+                screen_height=screen_height,         
+            )
             inimigo.vida -= 80
             
     @staticmethod
