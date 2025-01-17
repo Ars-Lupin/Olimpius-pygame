@@ -58,7 +58,7 @@ class Ataque:
                     pos_y += dy
 
                 # Desenhar a imagem atual
-                tela.blit(imagem, (pos_x + 200, pos_y))
+                tela.blit(imagem, (pos_x + 125, pos_y))
                 pygame.display.update()
                 pygame.time.delay(0)
 
