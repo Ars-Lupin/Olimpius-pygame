@@ -50,7 +50,7 @@ class Ataque:
 
                 # Carregar o quadro atual
                 imagem = pygame.image.load(quadro)
-                imagem = pygame.transform.scale(imagem, (200, 200))
+                imagem = pygame.transform.scale(imagem, (300, 300))
 
                 # Atualizar posição no modo móvel
                 if modo == 'movel' and destino:
@@ -58,7 +58,7 @@ class Ataque:
                     pos_y += dy
 
                 # Desenhar a imagem atual
-                tela.blit(imagem, (pos_x + 125, pos_y))
+                tela.blit(imagem, (pos_x + 75, pos_y))
                 pygame.display.update()
                 pygame.time.delay(0)
 
@@ -150,9 +150,9 @@ class Ataque:
                 Ataque('Touro de Creta', Ataque.flecha_solar),
                 Ataque('Cavalos de Diomedes', Ataque.explosao_solar),
                 Ataque('Aves do lago Estínfalo', Ataque.musica_curativa),
-                Ataque('Luz da Verdade', Ataque.luz_da_verdade),
-                Ataque('Chuva de Flechas', Ataque.chuva_de_flechas),
-                Ataque('Aura Radiante', Ataque.aura_radiante),
+                Ataque('Hidra de Lerna', Ataque.luz_da_verdade),
+                Ataque('Javali de Erimanto', Ataque.chuva_de_flechas),
+                Ataque('Cerberus', Ataque.cerberus),
                 ],
             'Hermes': None,
             'Luna': None,
@@ -743,5 +743,22 @@ class Ataque:
         for inimigo in inimigos:
             inimigo.vida += 30
     
-
+    def cerberus(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
+        print(f"{personagem_atual.nome} usou Cerberus!")
+        
+        for inimigo in inimigos:
+        # Exibir animação móvel do personagem até o inimigo
+            Ataque.Animacao.exibir_animacao(
+                tela=tela,
+                caminho_pasta='images/poderes/Cerbero',
+                pos_x=personagem_atual.x,
+                pos_y=personagem_atual.y,
+                modo='movel',
+                destino=inimigo.posicao_batalha,
+                personagens_selecionados=personagens_selecionados,
+                inimigos=inimigos,
+                screen_width=screen_width,
+                screen_height=screen_height,         
+            )
+            inimigo.vida -= 80
             
