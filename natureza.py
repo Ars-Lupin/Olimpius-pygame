@@ -153,19 +153,19 @@ def efeito_areia(atacante, alvo, acumulado):
 
 # Definição dos elementos com as funções de efeitos
 FOGO = Elemento("Fogo", "Causa queimaduras progressivas.", efeito_fogo)
-AGUA = Elemento("Água", "Deixa o alvo molhado, reduzindo resistência ao calor e eletricidade.", efeito_agua)
-VENTO = Elemento("Vento", "Empurra o alvo, podendo interromper ações.", efeito_vento)
+AGUA = Elemento("Água", "Deixa o alvo molhado, reduziz a recuperação de mana e se junto a eletrocutado causa o dobro de efeito o eletrocutado.", efeito_agua)
+VENTO = Elemento("Vento", "Pode retirar efeitos dos aliados.", efeito_vento)
 GELO = Elemento("Gelo", "Ralentiza o alvo, reduzindo velocidade.", efeito_gelo)
-TERRA = Elemento("Terra", "Reduz a mobilidade e pode causar atordoamento.", efeito_terra)
-METAL = Elemento("Metal", "Aumenta a chance de dano crítico em ataques físicos.", efeito_metal)
-ELETRICIDADE = Elemento("Eletricidade", "Paralisa o alvo temporariamente.", efeito_eletricidade)
-LUZ = Elemento("Luz", "Causa dano adicional contra criaturas das sombras.", efeito_luz)
-LAVA = Elemento("Lava", "Combina calor e impacto, causando dano contínuo.", efeito_lava)
-SOMBRAS = Elemento("Sombras", "Reduz a precisão e resistência mágica do alvo.", efeito_sombras)
-MADEIRA = Elemento("Madeira", "Enraíza o alvo, impedindo movimentação.", efeito_madeira)
+TERRA = Elemento("Terra", "Reduz a velocidade e resistência.", efeito_terra)
+METAL = Elemento("Metal", "Aumenta a chance de dano crítico.", efeito_metal)
+ELETRICIDADE = Elemento("Eletricidade", "Pode perder o turno e causa dano.", efeito_eletricidade)
+LUZ = Elemento("Luz", "Pode causar cegueira temporária, não podendo mirar em qual inimigo atacará", efeito_luz)
+LAVA = Elemento("Lava", "Causa queimaduras progressivas.", efeito_lava)
+SOMBRAS = Elemento("Sombras", "Reduz a magia e controle do alvo.", efeito_sombras)
+MADEIRA = Elemento("Madeira", "Enraíza o alvo, impedindo reduzindo velocidade, aumenta o dano de fogo, e se atacado com eletrico pode causar fogo.", efeito_madeira)
 VENENO = Elemento("Veneno", "Causa dano contínuo e reduz atributos.", efeito_veneno)
-VAPOR = Elemento("Vapor", "Reduz a visibilidade e aumenta a vulnerabilidade ao calor.", efeito_vapor)
-AREIA = Elemento("Areia", "Causa cegueira temporária, reduzindo a precisão do alvo.", efeito_areia)
+VAPOR = Elemento("Vapor", "Pode causar cegueira temporária, não podendo mirar em qual inimigo atacará. e causa dano", efeito_vapor)
+AREIA = Elemento("Areia", "Pode causar cegueira temporária, não podendo mirar em qual inimigo atacará.", efeito_areia)
 
 
 # Exemplo de aplicação de efeitos

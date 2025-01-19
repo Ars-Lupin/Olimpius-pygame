@@ -279,6 +279,7 @@ class Ataque:
         print(f"{personagem_atual.nome} usou Relâmpago!")
         for inimigo in inimigos:
             inimigo.vida -= 10
+        
 
     @staticmethod
     def raio_divino(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):

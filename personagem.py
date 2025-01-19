@@ -1,5 +1,6 @@
 import pygame  # type: ignore
 from ataques import Ataque
+from efeitos import Efeito
 from defesas import Defesa
 from batalha import desenha_fundo, desenha_personagens, preenche_infos, desenha_inimigos
 
@@ -28,18 +29,21 @@ class Personagem:
         self.resistencia = resistencia
         self.velocidade = velocidade
         self.vigor = vigor
+        self.mana = 100
         self.vida_max = vida
         self.vida = vida
         self.imagem = pygame.image.load(src_imagem)
         self.imagem = pygame.transform.scale(self.imagem, (230, 230))
         self.lista_ataques = Ataque.cria_ataques(nome)
         self.lista_defesas = Defesa.cria_defesas(nome)
-
+        self.controlado = False
         self.defesa_ativa = False
         self.habilidade_ativa = False
         self.posicao_menu = None
         self.selecionado = False
+        self.ataque_mira = True
         self.esta_vivo = True
+        self.efeitos = []
         self.imagem_menu = pygame.image.load(src_imagem_menu)
         self.imagem_menu_selecionado = pygame.image.load(src_imagem_menu_selecionado)
         self.robos_ativos = [] if nome == "Hefesto" else None
