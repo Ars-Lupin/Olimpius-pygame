@@ -2,6 +2,7 @@ import random
 import pygame
 import os
 from pygame.locals import *
+from efeitos import *
 
 class Ataque:
     """
@@ -279,6 +280,8 @@ class Ataque:
         print(f"{personagem_atual.nome} usou Relâmpago!")
         for inimigo in inimigos:
             inimigo.vida -= 10
+            eletrocutado = Eletrocutado()
+            Ataque.tentar_aplicar_efeito(eletrocutado, inimigo)
         
 
     @staticmethod
@@ -763,3 +766,6 @@ class Ataque:
             )
             inimigo.vida -= 80
             
+    def tentar_aplicar_efeito(efeito, personagem_atual):
+        if random.randint(1, 100) <= efeito.chance_aplicar:
+            efeito.aplicar(personagem_atual)

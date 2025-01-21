@@ -43,58 +43,57 @@ def desenha_personagens(tela, personagens_selecionados, screen_width, screen_hei
             for robo in personagem.robos_ativos:  # Lista de robôs ativos de Hefesto
                 if robo.esta_vivo:
                     robo.desenhar(tela)
+                    
+                    
+def desenha_inimigos(tela, personagens_selecionados, screen_width, screen_height):
+    pos_x = screen_width - (screen_width * 0.5)
+    pos_y = (screen_height * 0.2)
 
-def desenha_inimigos(tela, inimigos, screen_width, screen_height):
-    pos_x = screen_width * 0.6
-    pos_y = screen_height * 0.2
+    for i, personagem in enumerate(personagens_selecionados):
+        # Ajuste da posição dos inimigos
+        if i == 1:
+            pos_x = screen_width - (screen_width * 0.1)
+            pos_y += screen_height * 0.15
+        elif i == 2:
+            pos_x = screen_width - (screen_width * 0.5)
+            pos_y += screen_height * 0.17
 
-    for i, inimigo in enumerate(inimigos):
-        if i == 0 and inimigo.nome == 'Cerbero':
-            pos_x = screen_width * 0.65
-            pos_y += screen_height * 0.05
-            inimigo.x = pos_x
-            inimigo.y = pos_y
-        elif i == 1:
-            pos_x = screen_width * 0.65
-            pos_y += screen_height * 0.25
-            inimigo.x = pos_x
-            inimigo.y = pos_y
-
-        if inimigo.vida > 0:
-            # Inverter a imagem horizontalmente
-            imagem_invertida = pygame.transform.flip(inimigo.imagem, True, False)
+        # Verifica se o personagem está vivo
+        if personagem.vida > 0:
+            imagem_invertida = pygame.transform.flip(personagem.imagem, True, False)
             tela.blit(imagem_invertida, (pos_x, pos_y))
         else:
-            inimigo.esta_vivo = False
-            inimigos.remove(inimigo)
+            personagem.esta_vivo = False
+            personagens_selecionados.remove(personagem)
             continue
 
-        # Desenhar a barra de vida
-        img_hp_vazio = pygame.image.load('images/batalha/hp-vazio.png')
-        img_hp_vazio = pygame.transform.scale(img_hp_vazio, (inimigo.vida_max + 50, 40))
+        # Atualiza a posição do personagem
+        personagem.x = pos_x
+        personagem.y = pos_y
 
-        if inimigo.nome == 'Hades':
-            inimigo.posicao_batalha = (pos_x - 110, pos_y - 30)
-            inimigo.x = pos_x - 110
-            inimigo.y = pos_y - 30
-            tela.blit(img_hp_vazio, (pos_x + 205, pos_y + 102))
-            pygame.draw.rect(
-                tela,
-                (203, 54, 23),
-                (pos_x + 246, pos_y + 120, inimigo.vida, 10),
-                border_radius=10
-            )
-        elif inimigo.nome == 'Cerbero':
-            inimigo.posicao_batalha = (pos_x - 160, pos_y - 70)
-            inimigo.x = pos_x - 160
-            inimigo.y = pos_y - 70
-            tela.blit(img_hp_vazio, (pos_x + 155, pos_y + 20))
-            pygame.draw.rect(
-                tela,
-                (203, 54, 23),
-                (pos_x + 200, pos_y + 36, inimigo.vida - 5, 12),
-                border_radius=10
-            )
+        # Desenha robôs ativos de Hefesto (caso existam)
+        if personagem.nome == "Hefesto":
+            for robo in personagem.robos_ativos:  # Lista de robôs ativos de Hefesto
+                if robo.esta_vivo:
+                    robo.desenhar(tela)
+
+        # Desenho da barra de vida
+        img_hp_vazio = pygame.image.load('images/batalha/hp-vazio.png')
+        img_hp_vazio = pygame.transform.scale(img_hp_vazio, (personagem.vida_max + 50, 40))
+
+        # Desenha a barra de fundo da vida (vazia)
+        hp_bar_x = pos_x + 40  # Ajuste horizontal da barra de HP
+        hp_bar_y = pos_y + personagem.imagem.get_height() + 10  # Ajuste vertical da barra de HP
+        tela.blit(img_hp_vazio, (hp_bar_x, hp_bar_y))
+
+        # Calcula o tamanho da barra de vida preenchida com base na vida atual
+        vida_atual_largura = (personagem.vida / personagem.vida_max) * (personagem.vida_max + 50)
+        pygame.draw.rect(
+            tela,
+            (203, 54, 23),  # Cor vermelha para a barra de vida
+            (hp_bar_x, hp_bar_y + 5, vida_atual_largura, 30),  # Tamanho e posição da barra
+            border_radius=10
+        )
 
 
 def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_width, screen_height): 

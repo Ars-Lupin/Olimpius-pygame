@@ -2,18 +2,6 @@ import pygame # type: ignore
 import random
 
 class Inimigo:
-    '''
-    Atributos dos inimigos:
-        - Nome;
-        - Ataque;
-        - Defesa;
-        - Vida máxima;
-        - Vida atual;
-        - Velocidade;
-        - Imagem;
-        - Posição na batalha;
-        - Vivo.
-    '''
 
     def __init__(self, nome, ataque, defesa, vida_max, velocidade, src_imagem):
         self.nome = nome

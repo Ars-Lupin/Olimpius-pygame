@@ -1,11 +1,13 @@
 import pygame # type: ignore
+import random
 from batalha import desenha_fundo, desenha_personagens, preenche_infos, desenha_inimigos
 from inimigos import Inimigo
 from personagem import Personagem
 
 def realiza_batalha(tela, personagens_selecionados, screen_width, screen_height):
-    inimigos = Inimigo.cria_inimigos()
-
+    inimigos_totais = Personagem.cria_personagens()
+    inimigos = random.sample(inimigos_totais, 3)
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -13,7 +15,7 @@ def realiza_batalha(tela, personagens_selecionados, screen_width, screen_height)
                 exit()
 
         Personagem.verifica_personagens_vivos(personagens_selecionados)
-        Inimigo.verifica_inimigos_vivos(inimigos)
+        Personagem.verifica_personagens_vivos(inimigos)
 
         if len(personagens_selecionados) <= 0 and len(inimigos) > 0:
             pygame.time.delay(500)

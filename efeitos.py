@@ -6,13 +6,11 @@ class Efeito:
         self.duracao = duracao
         self.chance_aplicar = chance_aplicar
 
-    def aplicar_efeito(elemento, personagem):
-        if elemento and random.randint(1, 100) <= elemento.efeito.chance_aplicar:
-            elemento.efeito.aplicar(personagem)
+    def aplicar(self, personagem):
+        pass
 
     def verificar(self, personagem):
         pass
-
 
 class Queimadura(Efeito):
     def __init__(self):
@@ -98,3 +96,4 @@ class Bebado(Efeito):
         if self.duracao <= 0:
             personagem.efeitos.remove(self)
             personagem.controlado = False
+
