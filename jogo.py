@@ -43,7 +43,8 @@ def processa_turnos(tela, personagens_selecionados, inimigos, turno, screen_widt
             if personagem_atual in personagens_selecionados:
                 jogador_realiza_acao(tela, personagens_selecionados, inimigos, personagem_atual, turno, screen_width, screen_height)
             else:
-                personagem_atual.ataca_personagem(personagens_selecionados)
+                #personagem_atual.ataca_personagem(personagens_selecionados)
+                pass
 
         if len(personagens_selecionados) <= 0 or len(inimigos) <= 0:
             break

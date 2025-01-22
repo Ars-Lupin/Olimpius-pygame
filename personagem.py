@@ -30,6 +30,7 @@ class Personagem:
         self.velocidade = velocidade
         self.vigor = vigor
         self.mana = 100
+        self.mana_max = 100
         self.vida_max = vida
         self.vida = vida
         self.imagem = pygame.image.load(src_imagem)
@@ -57,26 +58,26 @@ class Personagem:
     def cria_personagens():
         # Lista de 20 personagens
         personagens = [
-            Personagem('Afrodite', 60, 50, 110, 85, 70, 120, 100, 'images/batalha/afrodite.png', 'images/menu/afrodite-menu.png', 'images/menu/afrodite-menu-selecionado.png', Ataque.cria_ataques('Afrodite'), Defesa.cria_defesas('Afrodite')),
-            Personagem('Alos', 75, 55, 130, 85, 80, 150, 120, 'images/batalha/alos.png', 'images/menu/alos-menu.png', 'images/menu/alos-menu-selecionado.png', Ataque.cria_ataques('Alos'), Defesa.cria_defesas('Alos')),
-            Personagem('Apolo', 70, 60, 140, 85, 90, 130, 110, 'images/batalha/apolo.png', 'images/menu/apolo-menu.png', 'images/menu/apolo-menu-selecionado.png', Ataque.cria_ataques('Apolo'), Defesa.cria_defesas('Apolo')),
-            Personagem('Ares', 90, 50, 140, 60, 85, 160, 100, 'images/batalha/ares.png', 'images/menu/ares-menu.png', 'images/menu/ares-menu-selecionado.png', Ataque.cria_ataques('Ares'), Defesa.cria_defesas('Ares')),
-            Personagem('Artemis', 75, 55, 120, 90, 100, 140, 90, 'images/batalha/artemis.png', 'images/menu/artemis-menu.png', 'images/menu/artemis-menu-selecionado.png', Ataque.cria_ataques('Artemis'), Defesa.cria_defesas('Artemis')),
-            Personagem('Atena', 70, 90, 130, 80, 95, 170, 120, 'images/batalha/atena.png', 'images/menu/atena-menu.png', 'images/menu/atena-menu-selecionado.png', Ataque.cria_ataques('Atena'), Defesa.cria_defesas('Atena')),
-            Personagem('Celion', 70, 70, 140, 70, 80, 150, 100, 'images/batalha/celion.png', 'images/menu/celion-menu.png', 'images/menu/celion-menu-selecionado.png', Ataque.cria_ataques('Celion'), Defesa.cria_defesas('Celion')),
-            Personagem('Demeter', 70, 70, 130, 70, 85, 160, 110, 'images/batalha/demeter.png', 'images/menu/demeter-menu.png', 'images/menu/demeter-menu-selecionado.png', Ataque.cria_ataques('Demeter'), Defesa.cria_defesas('Demeter')),
-            Personagem('Dionisio', 80, 70, 130, 70, 80, 170, 120, 'images/batalha/dionisio.png', 'images/menu/dionisio-menu.png', 'images/menu/dionisio-menu-selecionado.png', Ataque.cria_ataques('Dionisio'), Defesa.cria_defesas('Dionisio')),
-            Personagem('Draktel', 90, 80, 160, 60, 70, 180, 130, 'images/batalha/draktel.png', 'images/menu/draktel-menu.png', 'images/menu/draktel-menu-selecionado.png', Ataque.cria_ataques('Draktel'), Defesa.cria_defesas('Draktel')),
-            Personagem('Hades', 95, 70, 170, 60, 85, 200, 140, 'images/batalha/hades.png', 'images/menu/hades-menu.png', 'images/menu/hades-menu-selecionado.png', Ataque.cria_ataques('Hades'), Defesa.cria_defesas('Hades')),
-            Personagem('Hefesto', 70, 80, 150, 50, 80, 190, 140, 'images/batalha/hefesto.png', 'images/menu/hefesto-menu.png', 'images/menu/hefesto-menu-selecionado.png', Ataque.cria_ataques('Hefesto'), Defesa.cria_defesas('Hefesto')),
-            Personagem('Hera', 65, 75, 140, 75, 80, 170, 120, 'images/batalha/hera.png', 'images/menu/hera-menu.png', 'images/menu/hera-menu-selecionado.png', Ataque.cria_ataques('Hera'), Defesa.cria_defesas('Hera')),
-            Personagem('Hercules', 100, 90, 200, 50, 85, 210, 150, 'images/batalha/hercules.png', 'images/menu/hercules-menu.png', 'images/menu/hercules-menu-selecionado.png', Ataque.cria_ataques('Hercules'), Defesa.cria_defesas('Hercules')),
-            Personagem('Hermes', 60, 45, 120, 95, 100, 140, 100, 'images/batalha/hermes.png', 'images/menu/hermes-menu.png', 'images/menu/hermes-menu-selecionado.png', Ataque.cria_ataques('Hermes'), Defesa.cria_defesas('Hermes')),
-            Personagem('Luna', 85, 65, 150, 80, 90, 180, 130, 'images/batalha/luna.png', 'images/menu/luna-menu.png', 'images/menu/luna-menu-selecionado.png', Ataque.cria_ataques('Luna'), Defesa.cria_defesas('Luna')),
-            Personagem('Pantheon', 100, 100, 200, 50, 85, 230, 160, 'images/batalha/pantheon.png', 'images/menu/pantheon-menu.png', 'images/menu/pantheon-menu-selecionado.png', Ataque.cria_ataques('Pantheon'), Defesa.cria_defesas('Pantheon')),
-            Personagem('Poseidon', 85, 65, 160, 65, 85, 190, 140, 'images/batalha/poseidon.png', 'images/menu/poseidon-menu.png', 'images/menu/poseidon-menu-selecionado.png', Ataque.cria_ataques('Poseidon'), Defesa.cria_defesas('Poseidon')),
-            Personagem('Shaya', 65, 60, 125, 90, 90, 160, 120, 'images/batalha/shaya.png', 'images/menu/shaya-menu.png', 'images/menu/shaya-menu-selecionado.png', Ataque.cria_ataques('Shaya'), Defesa.cria_defesas('Shaya')),
-            Personagem('Zeus', 80, 60, 150, 70, 95, 170, 130, 'images/batalha/zeus.png', 'images/menu/zeus-menu.png', 'images/menu/zeus-menu-selecionado.png', Ataque.cria_ataques('Zeus'), Defesa.cria_defesas('Zeus'))
+            Personagem('Afrodite', 60, 50, 110, 85, 70, 400, 400, 'images/batalha/afrodite.png', 'images/menu/afrodite-menu.png', 'images/menu/afrodite-menu-selecionado.png', Ataque.cria_ataques('Afrodite'), Defesa.cria_defesas('Afrodite')),
+            Personagem('Alos', 75, 55, 130, 85, 80, 620, 620, 'images/batalha/alos.png', 'images/menu/alos-menu.png', 'images/menu/alos-menu-selecionado.png', Ataque.cria_ataques('Alos'), Defesa.cria_defesas('Alos')),
+            Personagem('Apolo', 70, 60, 140, 85, 90, 470, 470, 'images/batalha/apolo.png', 'images/menu/apolo-menu.png', 'images/menu/apolo-menu-selecionado.png', Ataque.cria_ataques('Apolo'), Defesa.cria_defesas('Apolo')),
+            Personagem('Ares', 90, 50, 140, 60, 85, 590, 590, 'images/batalha/ares.png', 'images/menu/ares-menu.png', 'images/menu/ares-menu-selecionado.png', Ataque.cria_ataques('Ares'), Defesa.cria_defesas('Ares')),
+            Personagem('Artemis', 75, 55, 120, 90, 100, 470, 470, 'images/batalha/artemis.png', 'images/menu/artemis-menu.png', 'images/menu/artemis-menu-selecionado.png', Ataque.cria_ataques('Artemis'), Defesa.cria_defesas('Artemis')),
+            Personagem('Atena', 70, 90, 130, 80, 95, 500, 500, 'images/batalha/atena.png', 'images/menu/atena-menu.png', 'images/menu/atena-menu-selecionado.png', Ataque.cria_ataques('Atena'), Defesa.cria_defesas('Atena')),
+            Personagem('Celion', 70, 70, 140, 70, 80, 560, 560, 'images/batalha/celion.png', 'images/menu/celion-menu.png', 'images/menu/celion-menu-selecionado.png', Ataque.cria_ataques('Celion'), Defesa.cria_defesas('Celion')),
+            Personagem('Demeter', 70, 70, 130, 70, 85, 420, 420, 'images/batalha/demeter.png', 'images/menu/demeter-menu.png', 'images/menu/demeter-menu-selecionado.png', Ataque.cria_ataques('Demeter'), Defesa.cria_defesas('Demeter')),
+            Personagem('Dionisio', 80, 70, 130, 70, 80, 480, 480, 'images/batalha/dionisio.png', 'images/menu/dionisio-menu.png', 'images/menu/dionisio-menu-selecionado.png', Ataque.cria_ataques('Dionisio'), Defesa.cria_defesas('Dionisio')),
+            Personagem('Draktel', 90, 80, 160, 60, 70, 560, 560, 'images/batalha/draktel.png', 'images/menu/draktel-menu.png', 'images/menu/draktel-menu-selecionado.png', Ataque.cria_ataques('Draktel'), Defesa.cria_defesas('Draktel')),
+            Personagem('Hades', 95, 70, 170, 60, 85, 510, 510, 'images/batalha/hades.png', 'images/menu/hades-menu.png', 'images/menu/hades-menu-selecionado.png', Ataque.cria_ataques('Hades'), Defesa.cria_defesas('Hades')),
+            Personagem('Hefesto', 70, 80, 150, 50, 80, 600, 600, 'images/batalha/hefesto.png', 'images/menu/hefesto-menu.png', 'images/menu/hefesto-menu-selecionado.png', Ataque.cria_ataques('Hefesto'), Defesa.cria_defesas('Hefesto')),
+            Personagem('Hera', 65, 75, 140, 75, 80, 390, 390, 'images/batalha/hera.png', 'images/menu/hera-menu.png', 'images/menu/hera-menu-selecionado.png', Ataque.cria_ataques('Hera'), Defesa.cria_defesas('Hera')),
+            Personagem('Hercules', 100, 90, 200, 50, 85, 530, 530, 'images/batalha/hercules.png', 'images/menu/hercules-menu.png', 'images/menu/hercules-menu-selecionado.png', Ataque.cria_ataques('Hercules'), Defesa.cria_defesas('Hercules')),
+            Personagem('Hermes', 60, 45, 120, 95, 100, 420, 420, 'images/batalha/hermes.png', 'images/menu/hermes-menu.png', 'images/menu/hermes-menu-selecionado.png', Ataque.cria_ataques('Hermes'), Defesa.cria_defesas('Hermes')),
+            Personagem('Luna', 85, 65, 150, 80, 90, 530, 530, 'images/batalha/luna.png', 'images/menu/luna-menu.png', 'images/menu/luna-menu-selecionado.png', Ataque.cria_ataques('Luna'), Defesa.cria_defesas('Luna')),
+            Personagem('Pantheon', 100, 100, 200, 50, 85, 570, 570, 'images/batalha/pantheon.png', 'images/menu/pantheon-menu.png', 'images/menu/pantheon-menu-selecionado.png', Ataque.cria_ataques('Pantheon'), Defesa.cria_defesas('Pantheon')),
+            Personagem('Poseidon', 85, 65, 160, 65, 85, 540, 540, 'images/batalha/poseidon.png', 'images/menu/poseidon-menu.png', 'images/menu/poseidon-menu-selecionado.png', Ataque.cria_ataques('Poseidon'), Defesa.cria_defesas('Poseidon')),
+            Personagem('Shaya', 65, 60, 125, 90, 90, 460, 460, 'images/batalha/shaya.png', 'images/menu/shaya-menu.png', 'images/menu/shaya-menu-selecionado.png', Ataque.cria_ataques('Shaya'), Defesa.cria_defesas('Shaya')),
+            Personagem('Zeus', 80, 60, 150, 70, 95, 590, 590, 'images/batalha/zeus.png', 'images/menu/zeus-menu.png', 'images/menu/zeus-menu-selecionado.png', Ataque.cria_ataques('Zeus'), Defesa.cria_defesas('Zeus'))
         ]
         return personagens
     def ataca_inimigo(self, tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):

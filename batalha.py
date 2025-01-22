@@ -43,22 +43,33 @@ def desenha_personagens(tela, personagens_selecionados, screen_width, screen_hei
             for robo in personagem.robos_ativos:  # Lista de robôs ativos de Hefesto
                 if robo.esta_vivo:
                     robo.desenhar(tela)
-                    
-                    
+
+        # Desenho da barra de vida (fundo branco e barra vermelha)
+        hp_bar_x = pos_x + 40
+        hp_bar_y = pos_y + personagem.imagem.get_height() + 10
+        pygame.draw.rect(tela, (255, 255, 255), (hp_bar_x, hp_bar_y, (personagem.vida_max/3) + 50, 15), border_radius=10)  # Fundo branco
+        vida_atual_largura = ((personagem.vida/3) / (personagem.vida_max/3)) * (personagem.vida_max/3 + 50)
+        pygame.draw.rect(tela, (203, 54, 23), (hp_bar_x, hp_bar_y, vida_atual_largura, 15), border_radius=10)  # Barra vermelha
+
+        # Desenho da barra de mana (fundo branco e barra azul)
+        mana_bar_y = hp_bar_y + 20  # Barra de mana abaixo da barra de vida
+        pygame.draw.rect(tela, (255, 255, 255), (hp_bar_x, mana_bar_y, personagem.mana_max + 50, 15))  # Fundo branco
+        mana_atual_largura = (personagem.mana / personagem.mana_max) * (personagem.mana_max + 50)
+        pygame.draw.rect(tela, (23, 54, 203), (hp_bar_x, mana_bar_y, mana_atual_largura, 15), border_radius=10)  # Barra azul
+
+
 def desenha_inimigos(tela, personagens_selecionados, screen_width, screen_height):
-    pos_x = screen_width - (screen_width * 0.5)
-    pos_y = (screen_height * 0.2)
+    pos_x = screen_width - (screen_width * 0.3)
+    pos_y = screen_height * 0.2
 
     for i, personagem in enumerate(personagens_selecionados):
-        # Ajuste da posição dos inimigos
         if i == 1:
-            pos_x = screen_width - (screen_width * 0.1)
+            pos_x = screen_width - (screen_width * 0.2)
             pos_y += screen_height * 0.15
         elif i == 2:
-            pos_x = screen_width - (screen_width * 0.5)
+            pos_x = screen_width - (screen_width * 0.3)
             pos_y += screen_height * 0.17
 
-        # Verifica se o personagem está vivo
         if personagem.vida > 0:
             imagem_invertida = pygame.transform.flip(personagem.imagem, True, False)
             tela.blit(imagem_invertida, (pos_x, pos_y))
@@ -67,33 +78,27 @@ def desenha_inimigos(tela, personagens_selecionados, screen_width, screen_height
             personagens_selecionados.remove(personagem)
             continue
 
-        # Atualiza a posição do personagem
         personagem.x = pos_x
         personagem.y = pos_y
 
-        # Desenha robôs ativos de Hefesto (caso existam)
         if personagem.nome == "Hefesto":
             for robo in personagem.robos_ativos:  # Lista de robôs ativos de Hefesto
                 if robo.esta_vivo:
                     robo.desenhar(tela)
 
-        # Desenho da barra de vida
-        img_hp_vazio = pygame.image.load('images/batalha/hp-vazio.png')
-        img_hp_vazio = pygame.transform.scale(img_hp_vazio, (personagem.vida_max + 50, 40))
+        # Desenho da barra de vida (fundo branco e barra vermelha)
+        hp_bar_x = pos_x + 40
+        hp_bar_y = pos_y + personagem.imagem.get_height() + 10
+        pygame.draw.rect(tela, (255, 255, 255), (hp_bar_x, hp_bar_y, (personagem.vida_max/3) + 50, 15), border_radius=10)  # Fundo branco
+        vida_atual_largura = (personagem.vida / (personagem.vida_max)/3) * ((personagem.vida_max/3) + 50)
+        pygame.draw.rect(tela, (203, 54, 23), (hp_bar_x, hp_bar_y, vida_atual_largura, 15), border_radius=10)  # Barra vermelha
 
-        # Desenha a barra de fundo da vida (vazia)
-        hp_bar_x = pos_x + 40  # Ajuste horizontal da barra de HP
-        hp_bar_y = pos_y + personagem.imagem.get_height() + 10  # Ajuste vertical da barra de HP
-        tela.blit(img_hp_vazio, (hp_bar_x, hp_bar_y))
+        # Desenho da barra de mana (fundo branco e barra azul)
+        mana_bar_y = hp_bar_y + 20  # Barra de mana abaixo da barra de vida
+        pygame.draw.rect(tela, (255, 255, 255), (hp_bar_x, mana_bar_y, personagem.mana_max + 50, 15),border_radius=10)  # Fundo branco
+        mana_atual_largura = (personagem.mana / personagem.mana_max) * (personagem.mana_max + 50)
+        pygame.draw.rect(tela, (23, 54, 203), (hp_bar_x, mana_bar_y, mana_atual_largura, 15), border_radius=10)  # Barra azul
 
-        # Calcula o tamanho da barra de vida preenchida com base na vida atual
-        vida_atual_largura = (personagem.vida / personagem.vida_max) * (personagem.vida_max + 50)
-        pygame.draw.rect(
-            tela,
-            (203, 54, 23),  # Cor vermelha para a barra de vida
-            (hp_bar_x, hp_bar_y + 5, vida_atual_largura, 30),  # Tamanho e posição da barra
-            border_radius=10
-        )
 
 
 def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_width, screen_height): 
@@ -155,8 +160,8 @@ def preenche_infos(tela, personagens_selecionados, personagem_atual, screen_widt
 
     # Renderizar informações dos personagens selecionados
     font = pygame.font.Font('fonts/god-of-war.ttf', 24)
-    pos_x = screen_width * 0.5 - 90
-    pos_y = screen_height * 0.85 - 20
+    pos_x = screen_width * 0.38
+    pos_y = screen_height * 0.82
 
     for personagem in personagens_selecionados:
         nome = font.render(personagem.nome, True, cor_texto)

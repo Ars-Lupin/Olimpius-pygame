@@ -22,7 +22,8 @@ class Ataque:
             pos_y,
             frame_rate=0.025,
             modo='estatico',
-            destino=None,
+            destino_x=None,
+            destino_y= None,
             personagens_selecionados=None,
             inimigos=None,
             screen_width=None,
@@ -36,8 +37,7 @@ class Ataque:
             ])
             
             # Variáveis para o modo móvel
-            if modo == 'movel' and destino:
-                destino_x, destino_y = destino
+            if modo == 'movel' and destino_x and destino_y:
                 dx = (destino_x - pos_x) / len(quadros)
                 dy = (destino_y - pos_y) / len(quadros)
             
@@ -54,7 +54,7 @@ class Ataque:
                 imagem = pygame.transform.scale(imagem, (300, 300))
 
                 # Atualizar posição no modo móvel
-                if modo == 'movel' and destino:
+                if modo == 'movel' and destino_x and destino_y:
                     pos_x += dx
                     pos_y += dy
 
@@ -247,7 +247,7 @@ class Ataque:
     @staticmethod
     def escudo_de_luz(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Escudo de Luz!")
-        personagem_atual.defesa += 5  # Aumento de defesa de exemplo
+        personagem_atual.resistencia += 5  # Aumento de defesa de exemplo
 
     @staticmethod
     def flecha_sagrada(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
@@ -337,7 +337,8 @@ class Ataque:
                 pos_x=inimigo.x,
                 pos_y=inimigo.y,
                 modo='movel',
-                destino=inimigo.posicao_batalha,
+                destino_x =inimigo.x,
+                destino_y = inimigo.y,
                 personagens_selecionados=personagens_selecionados,
                 inimigos=inimigos,
                 screen_width=screen_width,
@@ -349,7 +350,7 @@ class Ataque:
     def soco(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Punho Trovão!")
         for inimigo in inimigos:
-            dano = personagem_atual.forca * 1.2 - inimigo.defesa
+            dano = personagem_atual.forca * 1.2 - inimigo.resistencia
             inimigo.vida -= dano
     
     @staticmethod
@@ -534,12 +535,12 @@ class Ataque:
     @staticmethod
     def escudo_protetor(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Escudo Protetor!")
-        personagem_atual.defesa += 5
+        personagem_atual.resistencia += 5
         
     @staticmethod
     def estrategia_divina(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Estratégia Divina!")
-        personagem_atual.defesa += 10
+        personagem_atual.resistencia += 10
         
     @staticmethod
     def chama_da_sabedoria(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
@@ -563,7 +564,7 @@ class Ataque:
     def crescimento_rapido(tela, personagem_atual, inimigos):
         print(f"{personagem_atual.nome} usou Crescimento Rápido!")
         # Aumenta a defesa ou outro atributo
-        personagem_atual.defesa += 10
+        personagem_atual.resistencia += 10
 
     def chicote_de_videiras(tela, personagem_atual, inimigos):
         print(f"{personagem_atual.nome} usou Chicote de Videiras!")
@@ -691,7 +692,7 @@ class Ataque:
 
     def escudo_divino(tela, personagem_atual):
         print(f"{personagem_atual.nome} usou Escudo Divino!")
-        personagem_atual.defesa += 20
+        personagem_atual.resistencia += 20
 
     def chicote_de_poder(tela, personagem_atual, inimigos):
         print(f"{personagem_atual.nome} usou Chicote de Poder!")
@@ -758,7 +759,8 @@ class Ataque:
                 pos_x=personagem_atual.x,
                 pos_y=personagem_atual.y,
                 modo='movel',
-                destino=inimigo.posicao_batalha,
+                destino_x=inimigo.x,
+                destino_y=inimigo.y,
                 personagens_selecionados=personagens_selecionados,
                 inimigos=inimigos,
                 screen_width=screen_width,
