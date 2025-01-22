@@ -90,7 +90,7 @@ def desenha_inimigos(tela, personagens_selecionados, screen_width, screen_height
         hp_bar_x = pos_x + 40
         hp_bar_y = pos_y + personagem.imagem.get_height() + 10
         pygame.draw.rect(tela, (255, 255, 255), (hp_bar_x, hp_bar_y, (personagem.vida_max/3) + 50, 15), border_radius=10)  # Fundo branco
-        vida_atual_largura = (personagem.vida / (personagem.vida_max)/3) * ((personagem.vida_max/3) + 50)
+        vida_atual_largura = ((personagem.vida/3) / (personagem.vida_max/3)) * (personagem.vida_max/3 + 50)
         pygame.draw.rect(tela, (203, 54, 23), (hp_bar_x, hp_bar_y, vida_atual_largura, 15), border_radius=10)  # Barra vermelha
 
         # Desenho da barra de mana (fundo branco e barra azul)

@@ -59,7 +59,7 @@ class Ataque:
                     pos_y += dy
 
                 # Desenhar a imagem atual
-                tela.blit(imagem, (pos_x + 75, pos_y))
+                tela.blit(imagem, (pos_x, pos_y))
                 pygame.display.update()
                 pygame.time.delay(0)
 
@@ -494,7 +494,20 @@ class Ataque:
     def flecha_da_lua(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Flecha da Lua!")
         for inimigo in inimigos:
-            inimigo.vida -= 10
+            # Exibir animação móvel do personagem até o inimigo
+            Ataque.Animacao.exibir_animacao(
+                tela=tela,
+                caminho_pasta='images/poderes/flecha_da_lua',
+                pos_x=personagem_atual.x,
+                pos_y=personagem_atual.y,
+                modo='movel',
+                destino_x=inimigo.x,
+                destino_y=inimigo.y,
+                personagens_selecionados=personagens_selecionados,
+                inimigos=inimigos,
+                screen_width=screen_width,
+                screen_height=screen_height,         
+            )
             
     @staticmethod
     def armadilha_da_floresta(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
