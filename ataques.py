@@ -158,7 +158,6 @@ class Ataque:
             'Hermes': None,
             'Luna': None,
             'Pantheon': None,
-            'Poseidon': None,
             'Shaya': None,
             'Apolo': [
                 Ataque('Flecha Solar', Ataque.flecha_solar),
