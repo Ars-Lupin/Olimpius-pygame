@@ -344,6 +344,8 @@ class Ataque:
                 screen_width=screen_width,
                 screen_height=screen_height,         
             )
+            eletrocutado = Eletrocutado()
+            Ataque.tentar_aplicar_efeito(eletrocutado, inimigo)
             inimigo.vida -= 80
             
     @staticmethod
