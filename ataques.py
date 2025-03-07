@@ -9,9 +9,11 @@ class Ataque:
     Classe para gerenciar os ataques de cada personagem.
     """
 
-    def __init__(self, nome, funcao):
+    def __init__(self, nome, funcao, area=False):
         self.nome = nome
         self.funcao = funcao
+        self.area = area
+        
         
     class Animacao:
         @staticmethod
@@ -100,14 +102,18 @@ class Ataque:
             self.vida -= dano
             if self.vida <= 0:
                 self.esta_vivo = False
-    
-
 
     def uso(self, tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
-        """
-        Executa a função do ataque.
-        """
-        self.funcao(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height)
+        if self.area:
+            # Ataque em área — afeta todos os alvos
+            self.funcao(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height)
+        else:
+            # Ataque direcionado — seleciona um alvo
+            alvo = selecionar_alvo(tela, inimigos if personagem_atual in personagens_selecionados else personagens_selecionados)
+            if alvo:
+                self.funcao(tela, [alvo], personagens_selecionados, personagem_atual, screen_width, screen_height)
+                
+
 
     @staticmethod
     def cria_ataques(nome_personagem):
@@ -147,14 +153,14 @@ class Ataque:
                 Ataque('Criação divina', Ataque.criar_robos),
                 Ataque('Destruir pra construir', Ataque.destruir_pra_construir),
             ],
-            'Hercules': [                
-                Ataque('Touro de Creta', Ataque.flecha_solar),
-                Ataque('Cavalos de Diomedes', Ataque.explosao_solar),
-                Ataque('Aves do lago Estínfalo', Ataque.musica_curativa),
-                Ataque('Hidra de Lerna', Ataque.luz_da_verdade),
-                Ataque('Javali de Erimanto', Ataque.chuva_de_flechas),
+            'Hercules': [
+                Ataque('Touro de Creta', Ataque.touro_de_creta),
+                Ataque('Cavalos de Diomedes', Ataque.cavalos_de_diomedes),
+                Ataque('Aves do Lago Estínfalo', Ataque.aves_do_lago_estinfalo),
+                Ataque('Hidra de Lerna', Ataque.hidra_de_lerna),
+                Ataque('Javali de Erimanto', Ataque.javali_de_erimanto),
                 Ataque('Cerberus', Ataque.cerberus),
-                ],
+            ],
             'Hermes': None,
             'Luna': None,
             'Pantheon': None,
@@ -231,10 +237,7 @@ class Ataque:
                 Ataque('Raio do Céu', Ataque.raio_do_ceu),
                 Ataque('Aura de Comando', Ataque.aura_de_comando),
             ],
-
-
         }
-
         return ataques_por_personagem.get(nome_personagem, None)
 
     @staticmethod
@@ -281,7 +284,6 @@ class Ataque:
             inimigo.vida -= 10
             eletrocutado = Eletrocutado()
             Ataque.tentar_aplicar_efeito(eletrocutado, inimigo)
-        
 
     @staticmethod
     def raio_divino(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
@@ -603,7 +605,6 @@ class Ataque:
         for inimigo in inimigos:
             inimigo.vida -= 30
 
-
     # Dionísio
     def brinde_caotico(tela, personagem_atual, inimigos):
         print(f"{personagem_atual.nome} usou Brinde Caótico!")
@@ -633,7 +634,6 @@ class Ataque:
     def ritual_selvagem(tela, personagem_atual):
         print(f"{personagem_atual.nome} usou Ritual Selvagem!")
         personagem_atual.ataque += 15
-
 
     # Hades
     def explosao_sombria(tela, personagem_atual, inimigos):
@@ -665,7 +665,6 @@ class Ataque:
         print(f"{personagem_atual.nome} usou Portal das Trevas!")
         personagem_atual.vida += 25
 
-
     # Poseidon
     def tridente_das_profundezas(tela, personagem_atual, inimigos):
         print(f"{personagem_atual.nome} usou Tridente das Profundezas!")
@@ -696,7 +695,6 @@ class Ataque:
         print(f"{personagem_atual.nome} usou Fúria dos Mares!")
         for inimigo in inimigos:
             inimigo.vida -= 50
-
 
     # Hera
     def olhar_imponente(tela, personagem_atual, inimigos):
@@ -761,15 +759,49 @@ class Ataque:
         print(f"{personagem_atual.nome} usou Velocidade Celestial!")
         for inimigo in inimigos:
             inimigo.vida += 30
-    
+            
+    def touro_de_creta(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
+        print(f"{personagem_atual.nome} usou Touro de Creta!")
+        for inimigo in inimigos:
+            inimigo.vida -= 30
+            if random.randint(1, 100) <= 25:
+                inimigo.perde_turno = True  # Chance de atordoar
+
+    def cavalos_de_diomedes(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
+        print(f"{personagem_atual.nome} usou Cavalos de Diomedes!")
+        for inimigo in inimigos:
+            inimigo.vida -= 20
+            sangramento = Sangramento()
+            Ataque.tentar_aplicar_efeito(sangramento, inimigo)
+
+    def aves_do_lago_estinfalo(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
+        print(f"{personagem_atual.nome} usou Aves do Lago Estínfalo!")
+        for inimigo in inimigos:
+            inimigo.vida -= 15
+            sangramento = Sangramento()
+            Ataque.tentar_aplicar_efeito(sangramento, inimigo)
+            inimigo.precisao -= 10  # Reduz precisão do inimigo
+
+    def hidra_de_lerna(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
+        print(f"{personagem_atual.nome} usou Hidra de Lerna!")
+        for inimigo in inimigos:
+            inimigo.vida -= 40
+            envenenado = Envenenado()
+            Ataque.tentar_aplicar_efeito(envenenado, inimigo)
+
+    def javali_de_erimanto(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
+        print(f"{personagem_atual.nome} usou Javali de Erimanto!")
+        personagem_atual.forca += 15
+        for inimigo in inimigos:
+            inimigo.vida -= 20
+
     def cerberus(tela, inimigos, personagens_selecionados, personagem_atual, screen_width, screen_height):
         print(f"{personagem_atual.nome} usou Cerberus!")
-        
         for inimigo in inimigos:
-        # Exibir animação móvel do personagem até o inimigo
+            # Exibe animação do ataque
             Ataque.Animacao.exibir_animacao(
                 tela=tela,
-                caminho_pasta='images/poderes/Cerbero',
+                caminho_pasta='images/poderes/cerberus',
                 pos_x=personagem_atual.x,
                 pos_y=personagem_atual.y,
                 modo='movel',
@@ -778,10 +810,42 @@ class Ataque:
                 personagens_selecionados=personagens_selecionados,
                 inimigos=inimigos,
                 screen_width=screen_width,
-                screen_height=screen_height,         
+                screen_height=screen_height,
             )
             inimigo.vida -= 80
+            if random.randint(1, 100) <= 35:
+                inimigo.perde_turno = True  # Chance de paralisar
+            queimadura = Queimadura()
+            Ataque.tentar_aplicar_efeito(queimadura, inimigo)
+
+    def tentar_aplicar_efeito(efeito, personagem):
+        if random.randint(1, 100) <= efeito.chance_aplicar:
+            efeito.aplicar(personagem)
+
             
     def tentar_aplicar_efeito(efeito, personagem_atual):
         if random.randint(1, 100) <= efeito.chance_aplicar:
             efeito.aplicar(personagem_atual)
+            
+def selecionar_alvo(tela, alvos):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  # Botão esquerdo do mouse
+                        x, y = event.pos
+                        for alvo in alvos:
+                            if alvo.x <= x <= alvo.x + 200 and alvo.y <= y <= alvo.y + 200:
+                                return alvo
+
+            # Desenha a borda em vermelho sobre o alvo selecionado
+            desenha_alvos(tela, alvos)
+
+            pygame.display.flip()
+
+def desenha_alvos(tela, alvos):
+        cor_borda = (255, 0, 0)  # Vermelho
+        for alvo in alvos:
+            pygame.draw.rect(tela, cor_borda, (alvo.x - 5, alvo.y - 5, 210, 210), 3)
